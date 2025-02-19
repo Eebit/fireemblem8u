@@ -3,7 +3,6 @@
 #include "hardware.h"
 #include "m4a.h"
 #include "soundwrapper.h"
-#include "efxbattle.h"
 #include "bmlib.h"
 #include "spline.h"
 #include "sysutil.h"
@@ -14,26 +13,31 @@
 The opening monologue that introduces the Sacred Stones / associated lore.
 */
 
-struct OpSubtitleProc {
+struct OpSubtitleProc
+{
     /* 00 */ PROC_HEADER;
 
     /* 29 */ s8 index;
     /* 2A */ s16 timer_2a;
     /* 2C */ s16 timer_2c;
 
-    /* 2E */ u8 pad[0x4c-0x2e];
+    /* 2E */ STRUCT_PAD(0x2E, 0x4C);
 
     /* 4C */ s16 unk_4c;
     /* 4E */ s16 unk_4e;
 };
 
-struct OpSubtitleEnt {
-    void* gfx;
-    void* tsa;
-    int timer;
+struct OpSubtitleEnt
+{
+    /* 00 */ void * gfx;
+    /* 04 */ void * tsa;
+    /* 08 */ int timer;
 };
 
-const struct OpSubtitleEnt gOpSubtitleGfxLut[] = {
+// clang-format off
+
+const struct OpSubtitleEnt gOpSubtitleGfxLut[] =
+{
     {
         /*
         "In an age long past...
@@ -104,43 +108,43 @@ const struct OpSubtitleEnt gOpSubtitleGfxLut[] = {
     },
 };
 
+// clang-format on
+
 //! FE8U = 0x080C488C
-void sub_80C488C(int bg) {
+void sub_80C488C(int bg)
+{
     int offset = GetBackgroundTileDataOffset(bg);
-
-    Decompress(Img_CommGameBgScreen, (void*)(offset + 0x6000000));
-
-    CpuFastFill(0, (void*)(offset + 0x06005000), 0x20);
-
+    Decompress(Img_CommGameBgScreen, BG_CHR_ADDR(0x0) + offset);
+    CpuFastFill(0, BG_CHR_ADDR(0x280) + offset, CHR_SIZE);
     BG_EnableSyncByMask(1 << bg);
 
-    CpuFastFill(0x08A708A7, PAL_BG(0xE), 0x20);
-
+    CpuFastFill(RGB(7, 5, 2) | RGB(7, 5, 2) << 16, PAL_BG(14), PLTT_SIZE_4BPP);
     EnablePaletteSync();
 
     return;
 }
 
 //! FE8U = 0x080C48F0
-void sub_80C48F0(int bg) {
-    u16* mapBuf;
-    int tmp;
+void sub_80C48F0(int bg)
+{
     int i;
 
-    mapBuf = BG_GetMapBuffer(bg);
-    tmp = 0xF000;
+    u16 * mapBuf = BG_GetMapBuffer(bg);
+    int tileref = TILEREF(0x0, 15);
 
-    for (i = 0; i < 0x280; mapBuf++, i++) {
-        *mapBuf = tmp + i;
+    for (i = 0; i < 0x280; i++)
+    {
+        *mapBuf++ = tileref + i;
     }
 
     return;
 }
 
 //! FE8U = 0x080C4918
-void OpSubtitle_HandleStartPress(ProcPtr proc) {
-
-    if (gKeyStatusPtr->newKeys & START_BUTTON) {
+void OpSubtitle_HandleStartPress(ProcPtr proc)
+{
+    if (gKeyStatusPtr->newKeys & START_BUTTON)
+    {
         Sound_FadeOutBGM(1);
         Proc_Goto(proc, 6);
     }
@@ -148,51 +152,48 @@ void OpSubtitle_HandleStartPress(ProcPtr proc) {
     return;
 }
 
-u16 CONST_DATA gBgConfig_OpSubtitle[] = {
+// clang-format off
+
+u16 CONST_DATA gBgConfig_OpSubtitle[] =
+{
     0x0000, 0x6000, 0,
     0x0000, 0x6800, 0,
     0x8000, 0x7000, 0,
     0x8000, 0x7800, 0,
 };
 
-//! FE8U = 0x080C4944
-void OpSubtitle_Init(struct OpSubtitleProc* proc) {
+// clang-format on
 
+//! FE8U = 0x080C4944
+void OpSubtitle_Init(struct OpSubtitleProc * proc)
+{
     SetupBackgrounds(gBgConfig_OpSubtitle);
 
-    gLCDControlBuffer.dispcnt.mode = 1;
+    gLCDControlBuffer.dispcnt.mode = DISPCNT_MODE_1;
 
     gLCDControlBuffer.bg0cnt.priority = 3;
     gLCDControlBuffer.bg1cnt.priority = 3;
     gLCDControlBuffer.bg2cnt.priority = 0;
     gLCDControlBuffer.bg3cnt.priority = 3;
 
-    gLCDControlBuffer.dispcnt.bg0_on = 1;
-    gLCDControlBuffer.dispcnt.bg1_on = 0;
-    gLCDControlBuffer.dispcnt.bg2_on = 0;
-    gLCDControlBuffer.dispcnt.bg3_on = 0;
-    gLCDControlBuffer.dispcnt.obj_on = 1;
+    SetDispEnable(1, 0, 0, 0, 1);
 
     gLCDControlBuffer.bg2cnt.screenSize = 1;
     gLCDControlBuffer.bg2cnt.areaOverflowMode = 0;
 
-    gLCDControlBuffer.dispcnt.win0_on = 0;
-    gLCDControlBuffer.dispcnt.win1_on = 0;
-    gLCDControlBuffer.dispcnt.objWin_on = 0;
+    SetWinEnable(0, 0, 0);
 
-    SetBlendConfig(1, 0, 0x10, 0);
-
+    SetBlendAlpha(0, 16);
     SetBlendTargetA(0, 0, 1, 0, 0);
     SetBlendTargetB(1, 1, 0, 0, 1);
 
-    Decompress(Img_ChapterIntro_LensFlare, (void*)(GetBackgroundTileDataOffset(2) + 0x6000000));
+    Decompress(Img_ChapterIntro_LensFlare, BG_CHR_ADDR(0x0) + GetBackgroundTileDataOffset(BG_2));
     ApplyPalettes(Pal_ChapterIntro_LensFlare, 0, 3);
 
     BG_Fill(gBG2TilemapBuffer, 0);
-
     BG_EnableSyncByMask(BG2_SYNC_BIT);
 
-    StartBgm(SONG_PROLOGUE, 0);
+    StartBgm(SONG_PROLOGUE, NULL);
 
     proc->index = 0;
     proc->timer_2a = 60;
@@ -201,7 +202,8 @@ void OpSubtitle_Init(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C4A3C
-void Subtitle_LightFlareFx_Init(struct OpSubtitleProc* proc) {
+void Subtitle_LightFlareFx_Init(struct OpSubtitleProc * proc)
+{
     proc->unk_4c = 0;
     proc->unk_4e = 0;
 
@@ -209,48 +211,50 @@ void Subtitle_LightFlareFx_Init(struct OpSubtitleProc* proc) {
 
     BG_EnableSyncByMask(BG2_SYNC_BIT);
 
-    gLCDControlBuffer.dispcnt.bg0_on = 1;
-    gLCDControlBuffer.dispcnt.bg1_on = 0;
-    gLCDControlBuffer.dispcnt.bg2_on = 1;
-    gLCDControlBuffer.dispcnt.bg3_on = 0;
-    gLCDControlBuffer.dispcnt.obj_on = 0;
+    SetDispEnable(1, 0, 1, 0, 0);
 
     return;
 }
 
 //! FE8U = 0x080C4A88
-void Subtitle_LightFlareFx_Loop(struct OpSubtitleProc* proc) {
-    int a;
-    int b;
-    int c;
-    int d;
+void Subtitle_LightFlareFx_Loop(struct OpSubtitleProc * proc)
+{
+    int scale;
+    int alpha;
+    int xOffset;
+    int yOffset;
 
-    if (proc->unk_4c < 30) {
-        a = Interpolate(5, 4, 50, proc->unk_4c, 30);
-        b = Interpolate(4, 0, 16, proc->unk_4c, 30);
-    } else {
-        a = Interpolate(0, 50, 100, proc->unk_4c - 30, 30);
-        b = Interpolate(0, 16, 0, proc->unk_4c - 30, 30);
+    if (proc->unk_4c < 30)
+    {
+        scale = Interpolate(INTERPOLATE_RCUBIC, 4, 50, proc->unk_4c, 30);
+        alpha = Interpolate(INTERPOLATE_RSQUARE, 0, 16, proc->unk_4c, 30);
+    }
+    else
+    {
+        scale = Interpolate(INTERPOLATE_LINEAR, 50, 100, proc->unk_4c - 30, 30);
+        alpha = Interpolate(INTERPOLATE_LINEAR, 16, 0, proc->unk_4c - 30, 30);
     }
 
-    if (a > 49) {
-        a = 100 - a;
+    if (scale > 49)
+    {
+        scale = 100 - scale;
     }
 
-    c = Interpolate(0, 0, 214, proc->unk_4c, 60);
-    d = Interpolate(0, 16, 128, proc->unk_4c, 60);
+    xOffset = Interpolate(INTERPOLATE_LINEAR, 0, 214, proc->unk_4c, 60);
+    yOffset = Interpolate(INTERPOLATE_LINEAR, 16, 128, proc->unk_4c, 60);
 
-    BgAffinRotScaling(2, proc->unk_4e, 0, 0, a * 5 + 0x80, a * 5 + 0x80);
-    BgAffinScaling(2, 0x100, 0x100);
-    BgAffinAnchoring(2, c, d, 80, 72);
+    BgAffinRotScaling(BG_2, proc->unk_4e, 0, 0, scale * 5 + 128, scale * 5 + 128);
+    BgAffinScaling(BG_2, 0x100, 0x100);
+    BgAffinAnchoring(BG_2, xOffset, yOffset, 80, 72);
 
     proc->unk_4e -= 64;
 
-    SetBlendConfig(1, b, 0x10, 0);
+    SetBlendAlpha(alpha, 16);
 
     proc->unk_4c++;
 
-    if (proc->unk_4c > 59) {
+    if (proc->unk_4c > 59)
+    {
         Proc_Break(proc);
     }
 
@@ -258,13 +262,16 @@ void Subtitle_LightFlareFx_Loop(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C4BA0
-void Subtitle_LightFlareFx_End(void) {
+void Subtitle_LightFlareFx_End(void)
+{
     gLCDControlBuffer.dispcnt.bg2_on = 0;
-
     return;
 }
 
-struct ProcCmd CONST_DATA gProcScr_OpSubtitle_LightFlareFx[] = {
+// clang-format off
+
+struct ProcCmd CONST_DATA gProcScr_OpSubtitle_LightFlareFx[] =
+{
     PROC_SLEEP(1),
 
     PROC_CALL(Subtitle_LightFlareFx_Init),
@@ -277,23 +284,29 @@ struct ProcCmd CONST_DATA gProcScr_OpSubtitle_LightFlareFx[] = {
     PROC_END,
 };
 
-void sub_80C4BB4(u16* src, u16* dst, int count, int coeff) {
-    u16* srcIt;
-    u16* dstIt;
+// clang-format on
+
+//! FE8U = 0x080C4BB4
+void sub_80C4BB4(u16 * src, u16 * dst, int count, int coeff)
+{
+    u16 * srcIt;
+    u16 * dstIt;
     int i;
 
-    if (count <= 0) {
+    if (count <= 0)
+    {
         return;
     }
 
     dstIt = dst;
     srcIt = src;
-    for (i = count; i; i--) {
+    for (i = count; i != 0; i--)
+    {
         int color = (*srcIt);
 
-        s16 r = DivArm(0x1000, (color & 0x1f) * coeff);
-        s16 g = DivArm(0x1000, ((color >> 5) & 0x1f) * coeff);
-        s16 b = DivArm(0x1000, ((color >> 10) & 0x1f) * coeff);
+        s16 r = DivArm(0x1000, RED_VALUE(color) * coeff);
+        s16 g = DivArm(0x1000, GREEN_VALUE(color) * coeff);
+        s16 b = DivArm(0x1000, BLUE_VALUE(color) * coeff);
 
         *dstIt++ = (u32)r + ((u32)g << 5) + ((u32)b << 10);
         do srcIt++; while (0);
@@ -301,11 +314,12 @@ void sub_80C4BB4(u16* src, u16* dst, int count, int coeff) {
 }
 
 //! FE8U = 0x080C4C3C
-void OpSubtitle_AwaitTimer2a(struct OpSubtitleProc* proc) {
-
+void OpSubtitle_AwaitTimer2a(struct OpSubtitleProc * proc)
+{
     proc->timer_2a--;
 
-    if (proc->timer_2a < 1) {
+    if (proc->timer_2a < 1)
+    {
         Proc_Break(proc);
     }
 
@@ -315,13 +329,12 @@ void OpSubtitle_AwaitTimer2a(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C4C60
-void sub_80C4C60(struct OpSubtitleProc* proc) {
-
-    Decompress(gOpSubtitleGfxLut[proc->index].gfx, (void*)0x06001000);
-
+void sub_80C4C60(struct OpSubtitleProc * proc)
+{
+    Decompress(gOpSubtitleGfxLut[proc->index].gfx, BG_CHR_ADDR(0x80));
     Decompress(gOpSubtitleGfxLut[proc->index].tsa, gGenericBuffer);
 
-    CallARM_FillTileRect(gBG0TilemapBuffer, gGenericBuffer, 0x3080);
+    CallARM_FillTileRect(gBG0TilemapBuffer, gGenericBuffer, TILEREF(0x80, 3));
 
     gLCDControlBuffer.dispcnt.bg0_on = 1;
 
@@ -333,14 +346,13 @@ void sub_80C4C60(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C4CD0
-void sub_80C4CD0(struct OpSubtitleProc* proc) {
-
-    Decompress(gOpSubtitleGfxLut[proc->index].gfx, (void*)0x06001000);
+void sub_80C4CD0(struct OpSubtitleProc * proc)
+{
+    Decompress(gOpSubtitleGfxLut[proc->index].gfx, BG_CHR_ADDR(0x80));
 
     Decompress(gOpSubtitleGfxLut[proc->index].tsa, gGenericBuffer);
-
-    CallARM_FillTileRect(gBG0TilemapBuffer, gGenericBuffer, 0x3080);
-    CallARM_FillTileRect(gBG1TilemapBuffer, gGenericBuffer, 0xE080);
+    CallARM_FillTileRect(gBG0TilemapBuffer, gGenericBuffer, TILEREF(0x80, 3));
+    CallARM_FillTileRect(gBG1TilemapBuffer, gGenericBuffer, TILEREF(0x80, 14));
 
     gLCDControlBuffer.dispcnt.bg0_on = 1;
 
@@ -352,13 +364,12 @@ void sub_80C4CD0(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C4D54
-void sub_80C4D54(int index) {
-
-    Decompress(gOpSubtitleGfxLut[index].gfx, (void*)0x06005000);
+void sub_80C4D54(int index)
+{
+    Decompress(gOpSubtitleGfxLut[index].gfx, BG_CHR_ADDR(0x280));
 
     Decompress(gOpSubtitleGfxLut[index].tsa, gGenericBuffer);
-
-    CallARM_FillTileRect(gBG0TilemapBuffer, gGenericBuffer, 0x3280);
+    CallARM_FillTileRect(gBG0TilemapBuffer, gGenericBuffer, TILEREF(0x280, 3));
 
     BG_EnableSyncByMask(BG0_SYNC_BIT);
 
@@ -366,20 +377,17 @@ void sub_80C4D54(int index) {
 }
 
 //! FE8U = 0x080C4DA0
-void sub_80C4DA0(struct OpSubtitleProc* proc) {
-
+void sub_80C4DA0(struct OpSubtitleProc * proc)
+{
     proc->timer_2c++;
 
-    if (proc->timer_2c < 80) {
+    if (proc->timer_2c < 80)
+    {
         int coeff = _DivArm1(proc->timer_2c, 80, 0);
-
-        sub_80C4BB4(
-            gPal_OpSubtitle,
-            PAL_BG(3),
-            16,
-            coeff
-        );
-    } else {
+        sub_80C4BB4(gPal_OpSubtitle, PAL_BG(3), 16, coeff);
+    }
+    else
+    {
         ApplyPalette(gPal_OpSubtitle, 3);
 
         Proc_Break(proc);
@@ -396,36 +404,31 @@ void sub_80C4DA0(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C4E18
-void sub_80C4E18(struct OpSubtitleProc* proc) {
-
+void sub_80C4E18(struct OpSubtitleProc * proc)
+{
     proc->timer_2c++;
 
-    if (proc->timer_2c < 80) {
+    if (proc->timer_2c < 80)
+    {
         int coeff = 0x1000 - _DivArm1(proc->timer_2c, 80, 0);
-
-        sub_80C4BB4(
-            gPal_OpSubtitle,
-            PAL_BG(3),
-            16,
-            coeff
-        );
-    } else {
-        CpuFastFill(0, PAL_BG(3), 0x20);
+        sub_80C4BB4(gPal_OpSubtitle, PAL_BG(3), 16, coeff);
+    }
+    else
+    {
+        CpuFastFill(RGB_BLACK, PAL_BG(3), PLTT_SIZE_4BPP);
 
         proc->timer_2c = 0;
 
         proc->index++;
 
-        if (proc->index < 2) {
+        if (proc->index < 2)
+        {
             proc->timer_2a = 80;
             Proc_Break(proc);
-        } else {
-            gLCDControlBuffer.dispcnt.bg0_on = 0;
-            gLCDControlBuffer.dispcnt.bg1_on = 0;
-            gLCDControlBuffer.dispcnt.bg2_on = 0;
-            gLCDControlBuffer.dispcnt.bg3_on = 0;
-            gLCDControlBuffer.dispcnt.obj_on = 0;
-
+        }
+        else
+        {
+            SetDispEnable(0, 0, 0, 0, 0);
             Proc_Goto(proc, 1);
         }
     }
@@ -438,33 +441,24 @@ void sub_80C4E18(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C4EC4
-void sub_80C4EC4(struct OpSubtitleProc* proc) {
-
+void sub_80C4EC4(struct OpSubtitleProc * proc)
+{
     proc->timer_2c++;
 
-    if (proc->timer_2c < 80) {
+    if (proc->timer_2c < 80)
+    {
         int coeff = 0x1000 - _DivArm1(proc->timer_2c, 80, 0);
-
-        sub_80C4BB4(
-            gPal_OpSubtitle,
-            PAL_BG(3),
-            16,
-            coeff
-        );
-    } else {
-        CpuFastFill(0, PAL_BG(3), 0x20);
+        sub_80C4BB4(gPal_OpSubtitle, PAL_BG(3), 16, coeff);
+    }
+    else
+    {
+        CpuFastFill(RGB_BLACK, PAL_BG(3), PLTT_SIZE_4BPP);
 
         proc->timer_2c = 0;
-
         proc->index++;
-
         proc->timer_2a = 90;
 
-        gLCDControlBuffer.dispcnt.bg0_on = 0;
-        gLCDControlBuffer.dispcnt.bg1_on = 0;
-        gLCDControlBuffer.dispcnt.bg2_on = 1;
-        gLCDControlBuffer.dispcnt.bg3_on = 0;
-        gLCDControlBuffer.dispcnt.obj_on = 0;
+        SetDispEnable(0, 0, 1, 0, 0);
 
         Proc_Break(proc);
     }
@@ -477,23 +471,29 @@ void sub_80C4EC4(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C4F60
-void sub_80C4F60(struct OpSubtitleProc* proc) {
-
+void sub_80C4F60(struct OpSubtitleProc * proc)
+{
     proc->timer_2c++;
 
-    if (proc->timer_2c < 80) {
+    if (proc->timer_2c < 80)
+    {
         int coeff = _DivArm1(proc->timer_2c, 80, 0);
         s16 var = DivArm(0x1000, coeff << 4);
 
-        SetBlendConfig(1, 0x10 - var, var, 0);
-    } else {
-        SetBlendConfig(1, 0, 0x10, 0);
+        SetBlendAlpha(16 - var, var);
+    }
+    else
+    {
+        SetBlendAlpha(0, 16);
 
-        if (proc->index < 5) {
+        if (proc->index < 5)
+        {
             Proc_Break(proc);
             proc->timer_2a = gOpSubtitleGfxLut[proc->index].timer;
             proc->timer_2c = 0;
-        } else {
+        }
+        else
+        {
             proc->timer_2a = gOpSubtitleGfxLut[proc->index].timer;
             proc->index++;
 
@@ -509,17 +509,20 @@ void sub_80C4F60(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C501C
-void sub_80C501C(struct OpSubtitleProc* proc) {
-
+void sub_80C501C(struct OpSubtitleProc * proc)
+{
     proc->timer_2c++;
 
-    if (proc->timer_2c < 80) {
+    if (proc->timer_2c < 80)
+    {
         int coeff = _DivArm1(proc->timer_2c, 80, 0);
         s16 var = DivArm(0x1000, (0x1000 - coeff) << 4);
 
-        SetBlendConfig(1, 0x10 - var, var, 0);
-    } else {
-        SetBlendConfig(1, 0x10, 0, 0);
+        SetBlendAlpha(16 - var, var);
+    }
+    else
+    {
+        SetBlendAlpha(16, 0);
 
         proc->timer_2c = 0;
         proc->index++;
@@ -538,19 +541,18 @@ void sub_80C501C(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C50A0
-void sub_80C50A0(struct OpSubtitleProc* proc) {
-    sub_80C488C(1);
+void sub_80C50A0(struct OpSubtitleProc * proc)
+{
+    sub_80C488C(BG_1);
 
-    CpuFastFill(0, PAL_BG(0xF), 0x20);
+    CpuFastFill(RGB_BLACK, PAL_BG(15), PLTT_SIZE_4BPP);
 
-    sub_80C48F0(1);
+    sub_80C48F0(BG_1);
 
     BG_EnableSyncByMask(BG1_SYNC_BIT);
 
-    CpuFastFill(0, (void*)0x06005000, 0x1000);
-
+    CpuFastFill(0, BG_CHR_ADDR(0x280), 0x1000);
     BG_Fill(gBG0TilemapBuffer, 0x280);
-
     BG_EnableSyncByMask(BG0_SYNC_BIT);
 
     proc->timer_2a = 22;
@@ -560,29 +562,23 @@ void sub_80C50A0(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C5104
-void sub_80C5104(struct OpSubtitleProc* proc) {
-
-    if (proc->timer_2c == 0) {
-        gLCDControlBuffer.dispcnt.bg0_on = 1;
-        gLCDControlBuffer.dispcnt.bg1_on = 1;
-        gLCDControlBuffer.dispcnt.bg2_on = 1;
-        gLCDControlBuffer.dispcnt.bg3_on = 0;
-        gLCDControlBuffer.dispcnt.obj_on = 0;
+void sub_80C5104(struct OpSubtitleProc * proc)
+{
+    if (proc->timer_2c == 0)
+    {
+        SetDispEnable(1, 1, 1, 0, 0);
     }
 
     proc->timer_2c++;
 
-    if (proc->timer_2c < 46) {
+    if (proc->timer_2c < 46)
+    {
         int coeff = _DivArm1(proc->timer_2c, 46, 0);
-
-        sub_80C4BB4(
-            Pal_08B1756C,
-            PAL_BG(0xF),
-            16,
-            coeff
-        );
-    } else {
-        ApplyPalette(Pal_08B1756C, 0xF);
+        sub_80C4BB4(Pal_08B1756C, PAL_BG(15), 16, coeff);
+    }
+    else
+    {
+        ApplyPalette(Pal_08B1756C, 15);
 
         Proc_Break(proc);
 
@@ -598,7 +594,8 @@ void sub_80C5104(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C51A8
-void sub_80C51A8(void) {
+void sub_80C51A8(void)
+{
     sub_80C4D54(2);
 
     ApplyPalette(gPal_OpSubtitle, 3);
@@ -607,27 +604,32 @@ void sub_80C51A8(void) {
     return;
 }
 
-struct ProcCmd CONST_DATA gProcScr_08AA2184[] = {
-    PROC_SLEEP(0),
+// clang-format off
 
+struct ProcCmd CONST_DATA gProcScr_08AA2184[] =
+{
+    PROC_YIELD,
     PROC_SLEEP(36),
-
     PROC_CALL(sub_80C51A8),
 
     PROC_END,
 };
 
-u16 CONST_DATA gUnknown_08AA21A4[] = {
+u16 CONST_DATA gUnknown_08AA21A4[] =
+{
     0x0000, 0x6000, 0,
     0x0000, 0x6800, 0,
     0x0000, 0x7000, 0,
     0x8000, 0x7800, 0,
 };
 
+// clang-format on
+
 //! FE8U = 0x080C51C8
-void OpSubtitle_SetupBackgrounds(void) {
+void OpSubtitle_SetupBackgrounds(void)
+{
     int bg;
-    u16* bgConfig;
+    u16 * bgConfig;
 
     memset(&gLCDControlBuffer.bg0cnt, 0, 2);
     memset(&gLCDControlBuffer.bg1cnt, 0, 2);
@@ -636,7 +638,8 @@ void OpSubtitle_SetupBackgrounds(void) {
 
     bgConfig = gUnknown_08AA21A4;
 
-    for (bg = 0; bg < 4; bg++) {
+    for (bg = 0; bg < 4; bg++)
+    {
         SetBackgroundTileDataOffset(bg, *bgConfig++);
         SetBackgroundMapDataOffset(bg, *bgConfig++);
         SetBackgroundScreenSize(bg, *bgConfig++);
@@ -648,17 +651,18 @@ void OpSubtitle_SetupBackgrounds(void) {
 }
 
 //! FE8U = 0x080C5218
-void sub_80C5218(struct OpSubtitleProc* proc) {
+void sub_80C5218(struct OpSubtitleProc * proc)
+{
     OpSubtitle_SetupBackgrounds();
 
-    gLCDControlBuffer.dispcnt.mode = 0;
+    gLCDControlBuffer.dispcnt.mode = DISPCNT_MODE_0;
 
     gLCDControlBuffer.bg0cnt.priority = 1;
     gLCDControlBuffer.bg1cnt.priority = 2;
     gLCDControlBuffer.bg2cnt.priority = 3;
     gLCDControlBuffer.bg3cnt.priority = 0;
 
-    SetBlendConfig(1, 0, 0x10, 0);
+    SetBlendAlpha(0, 16);
 
     SetBlendTargetA(0, 0, 0, 1, 0);
     SetBlendTargetB(1, 1, 0, 0, 0);
@@ -666,13 +670,13 @@ void sub_80C5218(struct OpSubtitleProc* proc) {
     SetBlendBackdropA(0);
     SetBlendBackdropB(0);
 
-    BG_SetPosition(0, 0, 0);
-    BG_SetPosition(1, -3, -3);
-    BG_SetPosition(2, 0, 0);
-    BG_SetPosition(3, 0, 0);
+    BG_SetPosition(BG_0, 0, 0);
+    BG_SetPosition(BG_1, -3, -3);
+    BG_SetPosition(BG_2, 0, 0);
+    BG_SetPosition(BG_3, 0, 0);
 
-    sub_80C488C(3);
-    sub_80C48F0(3);
+    sub_80C488C(BG_3);
+    sub_80C48F0(BG_3);
 
     BG_Fill(gBG1TilemapBuffer, 0);
     BG_Fill(gBG2TilemapBuffer, 0);
@@ -681,11 +685,7 @@ void sub_80C5218(struct OpSubtitleProc* proc) {
 
     sub_80C4D54(2);
 
-    gLCDControlBuffer.dispcnt.bg0_on = 1;
-    gLCDControlBuffer.dispcnt.bg1_on = 0;
-    gLCDControlBuffer.dispcnt.bg2_on = 0;
-    gLCDControlBuffer.dispcnt.bg3_on = 1;
-    gLCDControlBuffer.dispcnt.obj_on = 0;
+    SetDispEnable(1, 0, 0, 1, 0);
 
     proc->index = 2;
     proc->timer_2a = 120;
@@ -694,22 +694,17 @@ void sub_80C5218(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C5328
-void sub_80C5328(void) {
-    CpuFastFill(0, (void*)0x6000000, 0x20);
-
+void sub_80C5328(void)
+{
+    CpuFastFill(0, BG_CHR_ADDR(0x0), CHR_SIZE);
     BG_EnableSyncByMask(BG1_SYNC_BIT);
-
-    gLCDControlBuffer.dispcnt.bg0_on = 1;
-    gLCDControlBuffer.dispcnt.bg1_on = 1;
-    gLCDControlBuffer.dispcnt.bg2_on = 0;
-    gLCDControlBuffer.dispcnt.bg3_on = 1;
-    gLCDControlBuffer.dispcnt.obj_on = 0;
-
+    SetDispEnable(1, 1, 0, 1, 0);
     return;
 }
 
 //! FE8U = 0x080C5370
-void sub_80C5370(struct OpSubtitleProc* proc) {
+void sub_80C5370(struct OpSubtitleProc * proc)
+{
     proc->timer_2c = 0;
     CpuFastCopy(gPaletteBuffer, gUnk_OpSubtitle_0201CDD4, 0x200);
 
@@ -717,21 +712,18 @@ void sub_80C5370(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C538C
-void sub_80C538C(struct OpSubtitleProc* proc) {
-
+void sub_80C538C(struct OpSubtitleProc * proc)
+{
     proc->timer_2c++;
 
-    if (proc->timer_2c < 60) {
+    if (proc->timer_2c < 60)
+    {
         int coeff = 0x1000 - _DivArm1(proc->timer_2c, 60, 0);
-
-        sub_80C4BB4(
-            gUnk_OpSubtitle_0201CDD4,
-            gPaletteBuffer,
-            0x200,
-            coeff
-        );
-    } else {
-        CpuFastFill(0, gPaletteBuffer, 0x200);
+        sub_80C4BB4(gUnk_OpSubtitle_0201CDD4, gPaletteBuffer, 0x200, coeff);
+    }
+    else
+    {
+        CpuFastFill(RGB_BLACK, gPaletteBuffer, 0x200);
 
         proc->timer_2c = 0;
         proc->timer_2a = 60;
@@ -747,21 +739,24 @@ void sub_80C538C(struct OpSubtitleProc* proc) {
 }
 
 //! FE8U = 0x080C5400
-void sub_80C5400(void) {
+void sub_80C5400(void)
+{
     Sound_FadeOutBGM(4);
-
     return;
 }
 
 //! FE8U = 0x080C540C
-void sub_80C540C(void) {
-    BG_SetPosition(1, 0, 0);
-
+void sub_80C540C(void)
+{
+    BG_SetPosition(BG_1, 0, 0);
     return;
 }
 
-struct ProcCmd CONST_DATA gProcScr_OpSubtitle[] = {
-    PROC_SLEEP(0),
+// clang-format off
+
+struct ProcCmd CONST_DATA gProcScr_OpSubtitle[] =
+{
+    PROC_YIELD,
 
     PROC_CALL(OpSubtitle_Init),
 
@@ -857,9 +852,11 @@ PROC_LABEL(7),
     PROC_END,
 };
 
-//! FE8U = 0x080C541C
-void StartIntroMonologue(ProcPtr proc) {
-    Proc_StartBlocking(gProcScr_OpSubtitle, proc);
+// clang-format on
 
+//! FE8U = 0x080C541C
+void StartIntroMonologue(ProcPtr proc)
+{
+    Proc_StartBlocking(gProcScr_OpSubtitle, proc);
     return;
 }
