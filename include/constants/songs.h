@@ -3,7 +3,7 @@
 enum song_idx {
     SONG_01 = 0x01,
     SONG_02 = 0x02,
-    SONG_03 = 0x03,
+    SONG_BGM_PRO_FIRST = 0x003, // Prologue
     SONG_04 = 0x04,
     SONG_05 = 0x05,
     SONG_06 = 0x06,
