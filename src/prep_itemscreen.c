@@ -24,13 +24,16 @@
 #include "constants/items.h"
 
 #include "prepscreen.h"
+
+#include "constants/msg.h"
 #include "constants/songs.h"
 
 int CheckInLinkArena(void);
 
 EWRAM_OVERLAY(0) struct Text gPrepItemTexts[32] = {};
 
-u16 CONST_DATA gPrepShopInventory[] = {
+u16 CONST_DATA gPrepShopInventory[] =
+{
     ITEM_SWORD_IRON,
     ITEM_LANCE_IRON,
     ITEM_AXE_IRON,
@@ -43,22 +46,24 @@ u16 CONST_DATA gPrepShopInventory[] = {
     ITEM_NONE,
 };
 
-int CONST_DATA gHelpTextIds_PrepItemScreen[] = {
-    0x05AF, // TODO: msgid "Exchange items[NL]between units."
-    0x05B3, // TODO: msgid "Display all units' items.[.]"
-    0x05B0, // TODO: msgid "Use items."
-    0x05B5, // TODO: msgid "Place all items in storage.[.]"
-    0x05B1, // TODO: msgid "Transfer items to and[.][NL]from storage.[.]"
-    0x05B2, // TODO: msgid "Buy and sell items.[.]"
+int CONST_DATA gHelpTextIds_PrepItemScreen[] =
+{
+    MSG_5AF, // "Exchange items[NL]between units."
+    MSG_5B3, // "Display all units' items.[.]"
+    MSG_5B0, // "Use items."
+    MSG_5B5, // "Place all items in storage.[.]"
+    MSG_5B1, // "Transfer items to and[.][NL]from storage.[.]"
+    MSG_5B2, // "Buy and sell items.[.]"
 };
 
-int CONST_DATA gHelpTextIds_GMapItemScreen[] = {
-    0x05AF, // TODO: msgid "Exchange items[NL]between units."
-    0x05B3, // TODO: msgid "Display all units' items.[.]"
-    0x05B0, // TODO: msgid "Use items."
-    0x05B5, // TODO: msgid "Place all items in storage.[.]"
-    0x05B1, // TODO: msgid "Transfer items to and[.][NL]from storage.[.]"
-    0x05B4, // TODO: msgid "Sell your unneeded items.[.][NL]Important items cannot be sold.[.]"
+int CONST_DATA gHelpTextIds_GMapItemScreen[] =
+{
+    MSG_5AF, // "Exchange items[NL]between units."
+    MSG_5B3, // "Display all units' items.[.]"
+    MSG_5B0, // "Use items."
+    MSG_5B5, // "Place all items in storage.[.]"
+    MSG_5B1, // "Transfer items to and[.][NL]from storage.[.]"
+    MSG_5B4, // "Sell your unneeded items.[.][NL]Important items cannot be sold.[.]"
 };
 
 //! FE8U = 0x080983D4
@@ -93,18 +98,23 @@ void PrepItemScreen_Init(struct PrepItemScreenProc * proc)
 //! FE8U = 0x08098448
 void DrawFundsSprite_Init(struct DrawFundsSpriteProc * proc)
 {
-    Decompress(gUnknown_08A1B1FC, (void *)0x06013000);
+    Decompress(gUnknown_08A1B1FC, OBJ_CHR_ADDR(0x180));
     ApplyPalette(gUnknown_08A1B638, proc->pal + 0x10);
     return;
 }
 
-u16 CONST_DATA gSprite_PrepFunds[] = {
+// clang-format off
+
+u16 CONST_DATA gSprite_PrepFunds[] =
+{
     4,
-    0x4000, 0x8000, 0x0050,
-    0x4000, 0x8020, 0x0054,
-    0x4010, 0x8000, 0x0058,
-    0x4010, 0x8020, 0x005C,
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_CHR(0x50),
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16 + OAM1_X(32), OAM2_CHR(0x54),
+    OAM0_SHAPE_32x16 + OAM0_Y(16), OAM1_SIZE_32x16, OAM2_CHR(0x58),
+    OAM0_SHAPE_32x16 + OAM0_Y(16), OAM1_SIZE_32x16 + OAM1_X(32), OAM2_CHR(0x5C),
 };
+
+// clang-format on
 
 //! FE8U = 0x08098474
 void DrawFundsSprite_Loop(struct DrawFundsSpriteProc* proc) {
@@ -120,14 +130,19 @@ void DrawFundsSprite_Loop(struct DrawFundsSpriteProc* proc) {
     return;
 }
 
-struct ProcCmd CONST_DATA gProcScr_DrawPrepFundsSprite[] = {
-    PROC_SLEEP(0),
+// clang-format off
+
+struct ProcCmd CONST_DATA gProcScr_DrawPrepFundsSprite[] =
+{
+    PROC_YIELD,
 
     PROC_CALL(DrawFundsSprite_Init),
     PROC_REPEAT(DrawFundsSprite_Loop),
 
     PROC_END,
 };
+
+// clang-format on
 
 //! FE8U = 0x080984A8
 void StartDrawPrepFundsSprite(int x, int y, int pal, ProcPtr parent) {
@@ -168,15 +183,20 @@ void DrawUnitInfoBg_Init(void) {
     return;
 }
 
-u16 CONST_DATA gSprite_PrepUnitInfoBg[] = {
+// clang-format off
+
+u16 CONST_DATA gSprite_PrepUnitInfoBg[] =
+{
     6,
-    0x4000, 0xC000, 0x0000,
-    0x4000, 0xC040, 0x0008,
-    0x4020, 0x8000, 0x0010,
-    0x4020, 0x8020, 0x0014,
-    0x4020, 0x8040, 0x0018,
-    0x4020, 0x8060, 0x001C,
+    OAM0_SHAPE_64x32, OAM1_SIZE_64x32, 0,
+    OAM0_SHAPE_64x32, OAM1_SIZE_64x32 + OAM1_X(64), OAM2_CHR(0x8),
+    OAM0_SHAPE_32x16 + OAM0_Y(32), OAM1_SIZE_32x16, OAM2_CHR(0x10),
+    OAM0_SHAPE_32x16 + OAM0_Y(32), OAM1_SIZE_32x16 + OAM1_X(32), OAM2_CHR(0x14),
+    OAM0_SHAPE_32x16 + OAM0_Y(32), OAM1_SIZE_32x16 + OAM1_X(64), OAM2_CHR(0x18),
+    OAM0_SHAPE_32x16 + OAM0_Y(32), OAM1_SIZE_32x16 + OAM1_X(96), OAM2_CHR(0x1C),
 };
+
+// clang-format on
 
 //! FE8U = 0x0809852C
 void DrawUnitInfoBg_Loop(struct DrawPrepUnitInfoBgProc * proc)
@@ -193,12 +213,17 @@ void DrawUnitInfoBg_Loop(struct DrawPrepUnitInfoBgProc * proc)
     return;
 }
 
-struct ProcCmd CONST_DATA gProcScr_DrawUnitInfoBgSprites[] = {
+// clang-format off
+
+struct ProcCmd CONST_DATA gProcScr_DrawUnitInfoBgSprites[] =
+{
     PROC_CALL(DrawUnitInfoBg_Init),
     PROC_REPEAT(DrawUnitInfoBg_Loop),
 
     PROC_END,
 };
+
+// clang-format on
 
 //! FE8U = 0x08098554
 void StartDrawPrepUnitInfoBgSprites(ProcPtr parent)
@@ -236,10 +261,10 @@ void EndDrawPrepUnitInfoBgSprites(void) {
 //! FE8U = 0x080985B8
 void PrepItemScreen_DrawFunds(void) {
     PutText(&gPrepItemTexts[30], TILEMAP_LOCATED(gBG0TilemapBuffer, 19, 17));
-    PutNumber(TILEMAP_LOCATED(gBG0TilemapBuffer, 27, 17), 2, GetPartyGoldAmount());
+    PutNumber(TILEMAP_LOCATED(gBG0TilemapBuffer, 27, 17), TEXT_COLOR_SYSTEM_BLUE, GetPartyGoldAmount());
     PutSpecialChar(TILEMAP_LOCATED(gBG0TilemapBuffer, 28, 17), TEXT_COLOR_SYSTEM_GOLD, TEXT_SPECIAL_G);
     ShowPrepFundsSpriteAt(168, 133);
-    BG_EnableSyncByMask(1);
+    BG_EnableSyncByMask(BG0_SYNC_BIT);
     return;
 }
 
@@ -247,7 +272,7 @@ void PrepItemScreen_DrawFunds(void) {
 void PrepItemScreen_HideFunds(void) {
     TileMap_FillRect(TILEMAP_LOCATED(gBG0TilemapBuffer, 19, 17), 10, 1, 0);
     HidePrepFundsSprite();
-    BG_EnableSyncByMask(1);
+    BG_EnableSyncByMask(BG0_SYNC_BIT);
     return;
 }
 
@@ -257,21 +282,21 @@ void PrepItemScreen_SetupGfx(struct PrepItemScreenProc * proc)
     int i;
 
     struct FaceVramEntry faceConfig[4] = {
-        { 0x5800, 6, },
-        { 0x6800, 7, },
-        { 0x0000, 0, },
-        { 0x0000, 0, },
+        { 0x2C0 * CHR_SIZE, 6, },
+        { 0x340 * CHR_SIZE, 7, },
+        { 0, 0, },
+        { 0, 0, },
     };
 
     SetupBackgrounds(gBgConfig_ItemUseScreen);
 
-    gLCDControlBuffer.dispcnt.mode = 0;
+    gLCDControlBuffer.dispcnt.mode = DISPCNT_MODE_0;
 
     SetupFaceGfxData(faceConfig);
 
     SetDispEnable(0, 0, 0, 0, 0);
 
-    SetupDebugFontForOBJ(0x06017800, 0);
+    SetupDebugFontForOBJ((u32)OBJ_CHR_ADDR(0x3C0), 0);
 
     gLCDControlBuffer.bg0cnt.priority = 0;
     gLCDControlBuffer.bg1cnt.priority = 2;
@@ -294,9 +319,9 @@ void PrepItemScreen_SetupGfx(struct PrepItemScreenProc * proc)
 
     SetPrimaryHBlankHandler(NULL);
 
-    BG_Fill(BG_GetMapBuffer(0), 0);
-    BG_Fill(BG_GetMapBuffer(1), 0);
-    BG_Fill(BG_GetMapBuffer(2), 0);
+    BG_Fill(BG_GetMapBuffer(BG_0), 0);
+    BG_Fill(BG_GetMapBuffer(BG_1), 0);
+    BG_Fill(BG_GetMapBuffer(BG_2), 0);
 
     gPaletteBuffer[PAL_BACKDROP_OFFSET] = 0;
     EnablePaletteSync();
@@ -316,7 +341,7 @@ void PrepItemScreen_SetupGfx(struct PrepItemScreenProc * proc)
     InitText(&gPrepItemTexts[30], 7);
     InitText(&gPrepItemTexts[31], 5);
 
-    LoadHelpBoxGfx((void *)0x06014000, -1);
+    LoadHelpBoxGfx(OBJ_CHR_ADDR(0x200), -1);
 
     SetBlendBackdropA(0);
     SetBlendBackdropB(0);
@@ -331,19 +356,19 @@ void PrepItemScreen_SetupGfx(struct PrepItemScreenProc * proc)
     SetWin0Layers(1, 1, 1, 1, 1);
     SetWOutLayers(1, 1, 0, 1, 1);
 
-    BG_SetPosition(0, 4, -4);
-    BG_SetPosition(1, 0, 4);
-    BG_SetPosition(2, -40, (proc->unk_34 - 4) & 0xff);
-    BG_EnableSyncByMask(7);
+    BG_SetPosition(BG_0, 4, -4);
+    BG_SetPosition(BG_1, 0, 4);
+    BG_SetPosition(BG_2, -40, (proc->unk_34 - 4) & 0xff);
+    BG_EnableSyncByMask(BG0_SYNC_BIT | BG1_SYNC_BIT | BG2_SYNC_BIT);
 
     ApplyUnitSpritePalettes();
-    CpuFastFill(0, PAL_OBJ(0x0B), 0x20);
+    CpuFastFill(RGB_BLACK, PAL_OBJ(0x0B), PLTT_SIZE_4BPP);
 
     ForceSyncUnitSpriteSheet();
 
-    Decompress(Img_PrepTextShadow, (void *)0x06013E00);
-    UiCursorHand_80ACA4C(0, 0, 0, 0xd0, 0x3c);
-    DisplaySysHandCursorTextShadow(0x600, 1);
+    Decompress(Img_PrepTextShadow, OBJ_CHR_ADDR(0x1F0));
+    UiCursorHand_80ACA4C(0, 0, 0, 208, 60);
+    DisplaySysHandCursorTextShadow(0x30 * CHR_SIZE, 1);
 
     RestartMuralBackground();
 
@@ -362,7 +387,7 @@ void PrepItemScreen_SetupGfx(struct PrepItemScreenProc * proc)
     UpdateMenuScrollBarConfig(6, proc->unk_34, ((PrepGetUnitAmount() - 1) / 3) + 1, 4);
     sub_8097668();
     PrepUpdateSMS();
-    SetBlendConfig(1, 8, 8, 0);
+    SetBlendAlpha(8, 8);
     SetBlendTargetA(0, 1, 0, 0, 0);
     SetBlendTargetB(0, 1, 0, 0, 0);
 
@@ -415,7 +440,7 @@ void sub_8098A04(u16 * tm)
         TEXT_COLOR_SYSTEM_WHITE,
         0,
         0,
-        GetStringFromIndex(0x0583) // TODO: msgid "Choose unit[.]"
+        GetStringFromIndex(MSG_583) // "Choose unit[.]"
     );
     PutDrawText(
         &gPrepItemTexts[26],
@@ -423,7 +448,7 @@ void sub_8098A04(u16 * tm)
         TEXT_COLOR_SYSTEM_WHITE,
         0,
         0, 
-        GetStringFromIndex(0x0584) // TODO: msgid " [.]"
+        GetStringFromIndex(MSG_584) // " [.]"
     );
 
     return;
@@ -441,25 +466,25 @@ void sub_8098A74(u16 * tm) {
 
     switch (GetGMapBaseMenuKind()) {
         case 0:
-            textId = 0x0672; // TODO: msgid "Enter Armory"
+            textId = MSG_672; // "Enter Armory"
             break;
 
         case 1:
-            textId = 0x0673; // TODO: msgid "Enter Shop"
+            textId = MSG_673; // "Enter Shop"
             break;
 
         case 2:
-            textId = 0x0674; // TODO: msgid "Enter ? Shop"
+            textId = MSG_674; // "Enter ? Shop"
             break;
 
         case 3:
-            textId = 0x0675; // TODO: msgid "Manage Items"
+            textId = MSG_675; // "Manage Items"
             break;
     }
 
     PutDrawText(&gPrepItemTexts[25], tm + TILEMAP_INDEX(0, 2), TEXT_COLOR_SYSTEM_WHITE, 4, 0, GetStringFromIndex(textId));
-    PutDrawText(&gPrepItemTexts[26], tm + TILEMAP_INDEX(0, 4), TEXT_COLOR_SYSTEM_WHITE, 4, 0, GetStringFromIndex(0x0583)); // TODO: msgid "Choose unit"
-    PutDrawText(&gPrepItemTexts[27], tm + TILEMAP_INDEX(0, 6), TEXT_COLOR_SYSTEM_WHITE, 4, 0, GetStringFromIndex(0x0584)); // TODO: msgid " [.]"
+    PutDrawText(&gPrepItemTexts[26], tm + TILEMAP_INDEX(0, 4), TEXT_COLOR_SYSTEM_WHITE, 4, 0, GetStringFromIndex(MSG_583)); // "Choose unit"
+    PutDrawText(&gPrepItemTexts[27], tm + TILEMAP_INDEX(0, 6), TEXT_COLOR_SYSTEM_WHITE, 4, 0, GetStringFromIndex(MSG_584)); // " [.]"
     return;
 }
 
@@ -516,14 +541,14 @@ void PutImg_PrepItemUseUnk(int vram, int pal) {
         Pal_08A1D8B0,
     };
 
-    Decompress(Img_PrepWindow, (void *)(0x6000000 + vram));
+    Decompress(Img_PrepWindow, BG_CHR_ADDR(0x0) + vram);
     ApplyPalette(Pals_PrepWindow[gPlaySt.config.windowColor], pal);
     return;
 }
 
 //! FE8U = 0x08098C8C
 void PutImg_PrepPopupWindow(int vram, int pal) {
-    Decompress(Img_PrepPopupWindow, (void *)(0x06010000 + vram));
+    Decompress(Img_PrepPopupWindow, OBJ_CHR_ADDR(0x0) + vram);
     ApplyPalette(gUiFramePaletteD, pal + 0x10);
     return;
 }
@@ -537,19 +562,19 @@ void sub_8098CC0(struct PrepItemScreenProc * proc)
 
     sub_809A08C(proc);
 
-    BG_Fill(BG_GetMapBuffer(0), 0);
-    BG_Fill(BG_GetMapBuffer(1), 0);
-    BG_Fill(BG_GetMapBuffer(2), 0);
+    BG_Fill(BG_GetMapBuffer(BG_0), 0);
+    BG_Fill(BG_GetMapBuffer(BG_1), 0);
+    BG_Fill(BG_GetMapBuffer(BG_2), 0);
 
-    PutImg_PrepItemUseUnk(0x6000, 5);
+    PutImg_PrepItemUseUnk(0x300 * CHR_SIZE, 5);
 
-    PutImg_PrepPopupWindow(0x800, 10);
+    PutImg_PrepPopupWindow(0x40 * CHR_SIZE, 10);
 
     Decompress(gUnknown_08A1B8B8, gGenericBuffer);
-    CallARM_FillTileRect(gBG1TilemapBuffer, gGenericBuffer, 0x1000);
+    CallARM_FillTileRect(gBG1TilemapBuffer, gGenericBuffer, TILEREF(0x0, 1));
     ApplyPalette(gUiFramePaletteD, 2);
 
-    UpdatePrepItemScreenFace(0, GetUnitFromPrepList(proc->hoverUnitIdx), 60, 76, 0x0503);
+    UpdatePrepItemScreenFace(0, GetUnitFromPrepList(proc->hoverUnitIdx), 60, 76, FACE_DISP_KIND(FACE_96x80_FLIPPED) | FACE_DISP_FLIPPED | FACE_DISP_HLAYER(4) | FACE_DISP_BLEND);
 
     sub_8099F7C(&gPrepItemTexts[15], TILEMAP_LOCATED(gBG0TilemapBuffer, 2, 9), GetUnitFromPrepList(proc->hoverUnitIdx), 2);
 
@@ -565,7 +590,7 @@ void sub_8098CC0(struct PrepItemScreenProc * proc)
         (proc->hoverUnitIdx % 3) * 64 + 24,
         ((proc->hoverUnitIdx / 3) * 16) + 4 - proc->unk_34,
         7,
-        0x800
+        0x40 * CHR_SIZE
     );
 
     sub_809A504(proc, 0);
@@ -584,7 +609,7 @@ void sub_8098CC0(struct PrepItemScreenProc * proc)
     PrepItemScreen_DrawFunds();
     HideUnitInfoBgSprites();
 
-    BG_EnableSyncByMask(7);
+    BG_EnableSyncByMask(BG0_SYNC_BIT | BG1_SYNC_BIT | BG2_SYNC_BIT);
 
     return;
 }
@@ -641,7 +666,7 @@ s8 PrepItemScreen_DpadKeyHandler(struct PrepItemScreenProc* proc) {
                 (proc->hoverUnitIdx % 3) * 64 + 24,
                 (proc->hoverUnitIdx / 3) * 16 + 4 - proc->unk_34,
                 7,
-                0x800
+                0x40 * CHR_SIZE
             );
         }
 
@@ -659,7 +684,7 @@ void sub_8098FAC(struct PrepItemScreenProc* proc) {
 
     if (((a - proc->unk_34) > 32) && ((proc->unk_34 + 48) < b)) {
         proc->unk_34 += proc->scrollAmount;
-        BG_SetPosition(2, -40, (proc->unk_34 - 4) & 0xff);
+        BG_SetPosition(BG_2, -40, (proc->unk_34 - 4) & 0xff);
         if (proc->selectedUnitIdx != 0xFF) {
             SetUiCursorHandConfig(
                 0,
@@ -673,7 +698,7 @@ void sub_8098FAC(struct PrepItemScreenProc* proc) {
 
     if (((a - proc->unk_34) < 16) && (proc->unk_34 != 0)) {
         proc->unk_34 -= proc->scrollAmount;
-        BG_SetPosition(2, -40, (proc->unk_34 - 4) & 0xff);
+        BG_SetPosition(BG_2, -40, (proc->unk_34 - 4) & 0xff);
         if (proc->selectedUnitIdx != 0xFF) {
             SetUiCursorHandConfig(
                 0,
@@ -710,7 +735,7 @@ void PrepItemScreen_ResumeFromStatScreen(struct PrepItemScreenProc* proc) {
 void sub_8099120(struct PrepItemScreenProc* proc) {
     int tmp = proc->unk_34;
 
-    if (!(tmp & 0xf)) {
+    if (!(tmp & 15)) {
 
         if (gKeyStatusPtr->newKeys & R_BUTTON) {
             Proc_Break(proc);
@@ -743,7 +768,7 @@ void sub_8099120(struct PrepItemScreenProc* proc) {
                         return;
 
                     default:
-                        Proc_Goto(proc, 0xd);
+                        Proc_Goto(proc, 13);
                         PlaySoundEffect(SONG_SE_SYS_WINDOW_SELECT1);
                         return;
                 }
@@ -780,9 +805,9 @@ void sub_8099120(struct PrepItemScreenProc* proc) {
         }
 
         if (PrepItemScreen_DpadKeyHandler(proc) != 0) {
-            UpdatePrepItemScreenFace(0, GetUnitFromPrepList(proc->hoverUnitIdx), 60, 76, 0x0503);
+            UpdatePrepItemScreenFace(0, GetUnitFromPrepList(proc->hoverUnitIdx), 60, 76, FACE_DISP_KIND(FACE_96x80_FLIPPED) | FACE_DISP_FLIPPED | FACE_DISP_HLAYER(4) | FACE_DISP_BLEND);
             sub_8099F7C(&gPrepItemTexts[15], TILEMAP_LOCATED(gBG0TilemapBuffer, 2, 9), GetUnitFromPrepList(proc->hoverUnitIdx), 2);
-            BG_EnableSyncByMask(1);
+            BG_EnableSyncByMask(BG0_SYNC_BIT);
         }
     }
 
@@ -796,18 +821,18 @@ void sub_8099328(struct PrepItemScreenProc* proc, u16 * tm, struct Unit* unit) {
     TileMap_FillRect(tm, 10, 6, 0);
 
     ClearText(&gPrepItemTexts[25]);
-    Text_InsertDrawString(&gPrepItemTexts[25], 0, PrepGetUnitAmount() < 2 ? TEXT_COLOR_SYSTEM_GRAY : TEXT_COLOR_SYSTEM_WHITE, GetStringFromIndex(0x594)); // TODO: msgid "Trade"
-    Text_InsertDrawString(&gPrepItemTexts[25], 32, PrepGetUnitAmount() < 2 ? TEXT_COLOR_SYSTEM_GRAY : TEXT_COLOR_SYSTEM_WHITE, GetStringFromIndex(0x595)); // TODO: msgid "List"
+    Text_InsertDrawString(&gPrepItemTexts[25], 0, PrepGetUnitAmount() < 2 ? TEXT_COLOR_SYSTEM_GRAY : TEXT_COLOR_SYSTEM_WHITE, GetStringFromIndex(MSG_594)); // "Trade"
+    Text_InsertDrawString(&gPrepItemTexts[25], 32, PrepGetUnitAmount() < 2 ? TEXT_COLOR_SYSTEM_GRAY : TEXT_COLOR_SYSTEM_WHITE, GetStringFromIndex(MSG_595)); // "List"
 
-    PutText(&gPrepItemTexts[25], tm + TILEMAP_INDEX(0, 1));
+    PutText(&gPrepItemTexts[25], TILEMAP_LOCATED(tm, 0, 1));
 
     ClearText(&gPrepItemTexts[26]);
-    Text_InsertDrawString(&gPrepItemTexts[26], 0, !CanUnitPrepScreenUse(unit) ? TEXT_COLOR_SYSTEM_GRAY : TEXT_COLOR_SYSTEM_WHITE, GetStringFromIndex(0x596)); // TODO: msgid "Use"
-    Text_InsertDrawString(&gPrepItemTexts[26], 32, !proc->hasConvoyAccess ? TEXT_COLOR_SYSTEM_GRAY : TEXT_COLOR_SYSTEM_WHITE, GetStringFromIndex(0x59A)); // TODO: msgid "Give all"
-    PutText(&gPrepItemTexts[26], tm + TILEMAP_INDEX(0, 3));
+    Text_InsertDrawString(&gPrepItemTexts[26], 0, !CanUnitPrepScreenUse(unit) ? TEXT_COLOR_SYSTEM_GRAY : TEXT_COLOR_SYSTEM_WHITE, GetStringFromIndex(MSG_596)); // "Use"
+    Text_InsertDrawString(&gPrepItemTexts[26], 32, !proc->hasConvoyAccess ? TEXT_COLOR_SYSTEM_GRAY : TEXT_COLOR_SYSTEM_WHITE, GetStringFromIndex(MSG_59A)); // "Give all"
+    PutText(&gPrepItemTexts[26], TILEMAP_LOCATED(tm, 0, 3));
 
     ClearText(&gPrepItemTexts[27]);
-    Text_InsertDrawString(&gPrepItemTexts[27], 0, !proc->hasConvoyAccess ? TEXT_COLOR_SYSTEM_GRAY : TEXT_COLOR_SYSTEM_WHITE, GetStringFromIndex(0x598)); // TODO: msgid "Supply"
+    Text_InsertDrawString(&gPrepItemTexts[27], 0, !proc->hasConvoyAccess ? TEXT_COLOR_SYSTEM_GRAY : TEXT_COLOR_SYSTEM_WHITE, GetStringFromIndex(MSG_598)); // "Supply"
 
     if (gGMData.state.bits.state_0) {
         struct Text* th = &gPrepItemTexts[27];
@@ -815,16 +840,16 @@ void sub_8099328(struct PrepItemScreenProc* proc, u16 * tm, struct Unit* unit) {
         if ((!proc->hasConvoyAccess) || (GetUnitItemCount(unit) < 1) || CheckInLinkArena()) {
             color = TEXT_COLOR_SYSTEM_GRAY;
         }
-        Text_InsertDrawString(th, 32, color, GetStringFromIndex(0x597)); // TODO: msgid "Sell"
+        Text_InsertDrawString(th, 32, color, GetStringFromIndex(MSG_597)); // "Sell"
     } else {
         if (CheckInLinkArena()) {
-            Text_InsertDrawString(&gPrepItemTexts[27], 32, TEXT_COLOR_SYSTEM_GRAY, GetStringFromIndex(0x599)); // TODO: msgid "Armory"
+            Text_InsertDrawString(&gPrepItemTexts[27], 32, TEXT_COLOR_SYSTEM_GRAY, GetStringFromIndex(MSG_599)); // "Armory"
         } else {
-            Text_InsertDrawString(&gPrepItemTexts[27], 32, TEXT_COLOR_SYSTEM_WHITE, GetStringFromIndex(0x599)); // TODO: msgid "Armory"
+            Text_InsertDrawString(&gPrepItemTexts[27], 32, TEXT_COLOR_SYSTEM_WHITE, GetStringFromIndex(MSG_599)); // "Armory"
         }
     }
 
-    PutText(&gPrepItemTexts[27], tm + TILEMAP_INDEX(0, 5));
+    PutText(&gPrepItemTexts[27], TILEMAP_LOCATED(tm, 0, 5));
     return;
 }
 
@@ -832,35 +857,35 @@ void sub_8099328(struct PrepItemScreenProc* proc, u16 * tm, struct Unit* unit) {
 void sub_80994C4(struct PrepItemScreenProc* proc) {
     const char* str;
     int x;
-    struct Text* th;
 
     struct Unit* unit = GetUnitFromPrepList(proc->selectedUnitIdx);
 
-    proc->unitSelected = 1;
-    BG_Fill(BG_GetMapBuffer(0), 0);
+    proc->unitSelected = true;
+    BG_Fill(BG_GetMapBuffer(BG_0), 0);
 
     sub_8099F7C(&gPrepItemTexts[15], TILEMAP_LOCATED(gBG0TilemapBuffer, 2, 9), GetUnitFromPrepList(proc->selectedUnitIdx), 0);
 
     Decompress(gUnknown_08A1B8B8, gGenericBuffer);
-    CallARM_FillTileRect(gBG1TilemapBuffer, gGenericBuffer, 0x1000);
+    CallARM_FillTileRect(gBG1TilemapBuffer, gGenericBuffer, TILEREF(0x0, 1));
 
     ShowUnitInfoBgSpritesAt(0, 31);
 
-    PutFaceChibi(GetUnitPortraitId(unit), TILEMAP_LOCATED(gBG0TilemapBuffer, 2, 9) - 0xa0, 0x270, 3, 0);
+    PutFaceChibi(GetUnitPortraitId(unit), TILEMAP_LOCATED(gBG0TilemapBuffer, 2, 4), 0x270, 3, false);
 
     ClearText(&gPrepItemTexts[31]);
 
     str = GetStringFromIndex(unit->pCharacterData->nameTextId);
     x = GetStringTextCenteredPos(40, str);
-    PutDrawText(&gPrepItemTexts[31], TILEMAP_LOCATED(gBG0TilemapBuffer, 2, 9) - 0x9a, 0, x, 0, str);
 
-    PutTwoSpecialChar(TILEMAP_LOCATED(gBG0TilemapBuffer, 2, 9) - 0x5b, TEXT_COLOR_SYSTEM_GOLD, TEXT_SPECIAL_LV_A, TEXT_SPECIAL_LV_B);
-    PutSpecialChar(TILEMAP_LOCATED(gBG0TilemapBuffer, 2, 9) - 0x57, TEXT_COLOR_SYSTEM_GOLD, TEXT_SPECIAL_E);
+    PutDrawText(&gPrepItemTexts[31], TILEMAP_LOCATED(gBG0TilemapBuffer, 8, 4), 0, x, 0, str);
 
-    PutNumberOrBlank(TILEMAP_LOCATED(gBG0TilemapBuffer, 2, 9) - 0x58, 2, unit->level);
-    PutNumberOrBlank(TILEMAP_LOCATED(gBG0TilemapBuffer, 2, 9) - 0x55, 2, unit->exp);
+    PutTwoSpecialChar(TILEMAP_LOCATED(gBG0TilemapBuffer, 7, 6), TEXT_COLOR_SYSTEM_GOLD, TEXT_SPECIAL_LV_A, TEXT_SPECIAL_LV_B);
+    PutSpecialChar(TILEMAP_LOCATED(gBG0TilemapBuffer, 11, 6), TEXT_COLOR_SYSTEM_GOLD, TEXT_SPECIAL_E);
 
-    BG_EnableSyncByMask(7);
+    PutNumberOrBlank(TILEMAP_LOCATED(gBG0TilemapBuffer, 10, 6), TEXT_COLOR_SYSTEM_BLUE, unit->level);
+    PutNumberOrBlank(TILEMAP_LOCATED(gBG0TilemapBuffer, 13, 6), TEXT_COLOR_SYSTEM_BLUE, unit->exp);
+
+    BG_EnableSyncByMask(BG0_SYNC_BIT | BG1_SYNC_BIT | BG2_SYNC_BIT);
 
     return;
 }
@@ -871,8 +896,8 @@ void sub_80995D4(struct PrepItemScreenProc* proc) {
 
     TileMap_FillRect(TILEMAP_LOCATED(gBG0TilemapBuffer, 15, 9), 12, 20, 0);
 
-    PutImg_PrepItemUseUnk(0x6000, 5);
-    PutImg_PrepPopupWindow(0x800, 10);
+    PutImg_PrepItemUseUnk(0x300 * CHR_SIZE, 5);
+    PutImg_PrepPopupWindow(0x40 * CHR_SIZE, 10);
     sub_80994C4(proc);
 
     unk = sub_809A21C(
@@ -888,7 +913,7 @@ void sub_80995D4(struct PrepItemScreenProc* proc) {
 
     sub_8098BE8();
 
-    BG_EnableSyncByMask(1);
+    BG_EnableSyncByMask(BG0_SYNC_BIT);
 
     return;
 }
@@ -903,10 +928,10 @@ void sub_8099654(struct PrepItemScreenProc* proc) {
         (proc->popupPromptIdx & 1) * 32 + 144,
         (proc->popupPromptIdx >> 1) * 16 + 84,
         3,
-        0x400
+        0x20 * CHR_SIZE
     );
 
-    BG_EnableSyncByMask(1);
+    BG_EnableSyncByMask(BG0_SYNC_BIT);
 
     return;
 }
@@ -918,7 +943,7 @@ void sub_80996B0(struct PrepItemScreenProc* proc) {
     sub_809A504(proc, 0);
     sub_8099F7C(&gPrepItemTexts[15], TILEMAP_LOCATED(gBG0TilemapBuffer, 2, 9), unit, 0);
 
-    BG_EnableSyncByMask(4);
+    BG_EnableSyncByMask(BG2_SYNC_BIT);
 
     return;
 }
@@ -982,7 +1007,7 @@ void sub_80996E8(struct PrepItemScreenProc* proc) {
 
                 case 3:
                     if (CheckInLinkArena() && (!(GetUnitFromPrepList(proc->selectedUnitIdx)->state & US_NOT_DEPLOYED))) {
-                        StartPrepErrorHelpbox(-1, -1, 0x088B, proc);
+                        StartPrepErrorHelpbox(-1, -1, MSG_88B, proc); // "If you have no usable[.][NL]weapons, you cannot attack.[.][X]"
                         return;
                     }
 
@@ -991,7 +1016,7 @@ void sub_80996E8(struct PrepItemScreenProc* proc) {
                             sub_8099328(proc, TILEMAP_LOCATED(gBG0TilemapBuffer, 19, 9), GetUnitFromPrepList(proc->selectedUnitIdx));
                             sub_8099F7C(&gPrepItemTexts[15], TILEMAP_LOCATED(gBG0TilemapBuffer, 2, 9), GetUnitFromPrepList(proc->selectedUnitIdx), 0);
 
-                            BG_EnableSyncByMask(1);
+                            BG_EnableSyncByMask(BG0_SYNC_BIT);
 
                             PlaySoundEffect(SONG_SE_SYS_WINDOW_SELECT1);
                             return;
@@ -1094,7 +1119,7 @@ void sub_80996E8(struct PrepItemScreenProc* proc) {
         (proc->popupPromptIdx & 1) * 32 + 144,
         (proc->popupPromptIdx >> 1) * 16 + 84,
         3,
-        0x400
+        0x20 * CHR_SIZE
     );
 
     if (proc->unk_2d == 0xff) {
@@ -1120,32 +1145,32 @@ void sub_80996E8(struct PrepItemScreenProc* proc) {
 
 //! FE8U = 0x08099AA0
 void sub_8099AA0(struct PrepItemScreenProc* proc) {
-    BG_Fill(BG_GetMapBuffer(0), 0);
+    BG_Fill(BG_GetMapBuffer(BG_0), 0);
 
     sub_8099F7C(&gPrepItemTexts[15], TILEMAP_LOCATED(gBG0TilemapBuffer, 2, 9), GetUnitFromPrepList(proc->selectedUnitIdx), 0);
     sub_8099F7C(&gPrepItemTexts[20], TILEMAP_LOCATED(gBG0TilemapBuffer, 17, 9), GetUnitFromPrepList(proc->hoverUnitIdx), 0);
 
-    BG_EnableSyncByMask(1);
+    BG_EnableSyncByMask(BG0_SYNC_BIT);
 
     return;
 }
 
 //! FE8U = 0x08099AF8
 void sub_8099AF8(struct PrepItemScreenProc* proc) {
-    BG_SetPosition(1, 0, 4);
+    BG_SetPosition(BG_1, 0, 4);
 
-    BG_Fill(BG_GetMapBuffer(1), 0);
-    BG_Fill(BG_GetMapBuffer(2), 0);
+    BG_Fill(BG_GetMapBuffer(BG_1), 0);
+    BG_Fill(BG_GetMapBuffer(BG_2), 0);
 
     TileMap_FillRect(gBG0TilemapBuffer, 31, 8, 0);
 
-    PutImg_PrepItemUseUnk(0x6000, 5);
+    PutImg_PrepItemUseUnk(0x300 * CHR_SIZE, 5);
 
     Decompress(gUnknown_08A1B8B8, gGenericBuffer);
-    CallARM_FillTileRect(gBG1TilemapBuffer, gGenericBuffer, 0x1000);
+    CallARM_FillTileRect(TILEMAP_LOCATED(gBG1TilemapBuffer, 0, 0), gGenericBuffer, TILEREF(0x0, 1));
 
     Decompress(gUnknown_08A1B990, gGenericBuffer);
-    CallARM_FillTileRect(gBG1TilemapBuffer + TILEMAP_INDEX(15, 9), gGenericBuffer, 0x1000);
+    CallARM_FillTileRect(TILEMAP_LOCATED(gBG1TilemapBuffer, 15, 9), gGenericBuffer, TILEREF(0x0, 1));
 
     proc->unitSelected = 0;
 
@@ -1153,14 +1178,14 @@ void sub_8099AF8(struct PrepItemScreenProc* proc) {
         ((proc->hoverUnitIdx % 3) * 64) + 24,
         ((proc->hoverUnitIdx / 3) * 16) + 4 - proc->unk_34,
         7,
-        0x800
+        0x40 * CHR_SIZE
     );
     sub_809A504(proc, 0);
 
-    BG_EnableSyncByMask(7);
+    BG_EnableSyncByMask(BG0_SYNC_BIT | BG1_SYNC_BIT | BG2_SYNC_BIT);
 
-    UpdatePrepItemScreenFace(0, GetUnitFromPrepList(proc->selectedUnitIdx), 60, 76, 0x0503);
-    UpdatePrepItemScreenFace(1, GetUnitFromPrepList(proc->hoverUnitIdx), 180, 76, 0x0502);
+    UpdatePrepItemScreenFace(0, GetUnitFromPrepList(proc->selectedUnitIdx), 60, 76, FACE_DISP_KIND(FACE_96x80_FLIPPED) | FACE_DISP_FLIPPED | FACE_DISP_HLAYER(4) | FACE_DISP_BLEND);
+    UpdatePrepItemScreenFace(1, GetUnitFromPrepList(proc->hoverUnitIdx), 180, 76, FACE_DISP_KIND(FACE_96x80) | FACE_DISP_HLAYER(4) | FACE_DISP_BLEND);
 
     SetUiCursorHandConfig(
         0,
@@ -1182,7 +1207,7 @@ void sub_8099AF8(struct PrepItemScreenProc* proc) {
 void sub_8099C60(void)
 {
     sub_8098BE8();
-    BG_EnableSyncByMask(1);
+    BG_EnableSyncByMask(BG0_SYNC_BIT);
     return;
 }
 
@@ -1190,7 +1215,7 @@ void sub_8099C60(void)
 void PrepItemScreen_Loop_MainKeyHandler(struct PrepItemScreenProc* proc) {
     int tmp = proc->unk_34;
 
-    if (!(tmp & 0xf)) {
+    if (!(tmp & 15)) {
         if (gKeyStatusPtr->newKeys & R_BUTTON) {
             Proc_Break(proc);
             return;
@@ -1219,7 +1244,7 @@ void PrepItemScreen_Loop_MainKeyHandler(struct PrepItemScreenProc* proc) {
             UpdatePrepItemScreenFace(1, GetUnitFromPrepList(proc->hoverUnitIdx), 180, 76, 0x0502);
             sub_8099F7C(&gPrepItemTexts[20], TILEMAP_LOCATED(gBG0TilemapBuffer, 17, 9), GetUnitFromPrepList(proc->hoverUnitIdx), 2);
             sub_8099F7C(&gPrepItemTexts[15], TILEMAP_LOCATED(gBG0TilemapBuffer, 2, 9), GetUnitFromPrepList(proc->selectedUnitIdx), 1);
-            BG_EnableSyncByMask(1);
+            BG_EnableSyncByMask(BG0_SYNC_BIT);
         }
     }
 
@@ -1287,8 +1312,11 @@ void sub_8099E68(struct PrepItemScreenProc * proc)
     return;
 }
 
-struct ProcCmd CONST_DATA ProcScr_PrepItemScreen[] = {
-    PROC_SLEEP(0),
+// clang-format off
+
+struct ProcCmd CONST_DATA ProcScr_PrepItemScreen[] =
+{
+    PROC_YIELD,
 
     PROC_CALL(PrepItemScreen_Init),
     PROC_CALL(PrepItemScreen_SetupGfx),
@@ -1297,7 +1325,7 @@ struct ProcCmd CONST_DATA ProcScr_PrepItemScreen[] = {
     PROC_CALL_ARG(NewFadeIn, 16),
     PROC_WHILE(FadeInExists),
 
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_GOTO(1),
 
@@ -1309,14 +1337,14 @@ PROC_LABEL(0),
 PROC_LABEL(1),
     PROC_REPEAT(sub_8099120),
     PROC_CALL(DisableAllGfx),
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_CALL(PrepItemScreen_StartStatScreen),
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_CALL(PrepItemScreen_ResumeFromStatScreen),
     PROC_CALL(sub_8098CC0),
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_CALL(EnableAllGfx),
 
@@ -1325,7 +1353,7 @@ PROC_LABEL(1),
 PROC_LABEL(2),
     PROC_CALL(sub_80995D4),
     PROC_CALL(PrepItemScreen_DrawFunds),
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_CALL(sub_8099654),
 
@@ -1339,7 +1367,7 @@ PROC_LABEL(3),
 PROC_LABEL(4),
     PROC_CALL(PrepItemScreen_HideFunds),
     PROC_CALL(sub_8099AF8),
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_CALL(sub_8099C60),
 
@@ -1348,15 +1376,15 @@ PROC_LABEL(4),
 PROC_LABEL(5),
     PROC_REPEAT(PrepItemScreen_Loop_MainKeyHandler),
     PROC_CALL(DisableAllGfx),
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_CALL(PrepItemScreen_StartStatScreen),
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_CALL(PrepItemScreen_ResumeFromStatScreen),
     PROC_CALL(sub_8099AF8),
     PROC_CALL(sub_8099C60),
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_CALL(EnableAllGfx),
 
@@ -1367,10 +1395,10 @@ PROC_LABEL(6),
     PROC_WHILE(FadeOutExists),
 
     PROC_CALL(StartPrepItemTradeScreen),
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_CALL(PrepItemScreen_SetupGfx),
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_CALL(sub_8099AF8),
     PROC_CALL(sub_8099C60),
@@ -1386,10 +1414,10 @@ PROC_LABEL(8),
 
     PROC_CALL(PrepItemScreen_OnEnd),
     PROC_CALL(StartPrepItemListScreen),
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_CALL(PrepItemScreen_SetupGfx),
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_CALL(sub_8034194),
     PROC_CALL(sub_80996B0),
@@ -1408,10 +1436,10 @@ PROC_LABEL(9),
 
     PROC_CALL(PrepItemScreen_OnEnd),
     PROC_CALL(StartPrepItemUse),
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_CALL(PrepItemScreen_SetupGfx),
-    PROC_SLEEP(0),
+    PROC_YIELD,
 
     PROC_CALL(sub_8034194),
     PROC_CALL(sub_80996B0),
@@ -1430,9 +1458,11 @@ PROC_LABEL(10),
 
     PROC_CALL(PrepItemScreen_OnEnd),
     PROC_CALL(StartPrepItemSupply),
-    PROC_SLEEP(0),
+    PROC_YIELD,
+
     PROC_CALL(PrepItemScreen_SetupGfx),
-    PROC_SLEEP(0),
+    PROC_YIELD,
+
     PROC_CALL(sub_8034194),
     PROC_CALL(sub_80996B0),
     PROC_CALL(sub_80995D4),
@@ -1450,9 +1480,11 @@ PROC_LABEL(11),
 
     PROC_CALL(PrepItemScreen_OnEnd),
     PROC_CALL(StartPrepSell),
-    PROC_SLEEP(0),
+    PROC_YIELD,
+
     PROC_CALL(PrepItemScreen_SetupGfx),
-    PROC_SLEEP(0),
+    PROC_YIELD,
+
     PROC_CALL(sub_8034194),
     PROC_CALL(sub_80996B0),
     PROC_CALL(sub_80995D4),
@@ -1470,9 +1502,11 @@ PROC_LABEL(12),
 
     PROC_CALL(PrepItemScreen_OnEnd),
     PROC_CALL(StartPrepArmory),
-    PROC_SLEEP(0),
+    PROC_YIELD,
+
     PROC_CALL(PrepItemScreen_SetupGfx),
-    PROC_SLEEP(0),
+    PROC_YIELD,
+
     PROC_CALL(sub_8034194),
     PROC_CALL(sub_80996B0),
     PROC_CALL(sub_80995D4),
@@ -1494,6 +1528,8 @@ PROC_LABEL(13),
 
     PROC_END,
 };
+
+// clang-format on
 
 //! FE8U = 0x08099E98
 void UpdatePrepItemScreenFace(int slot, struct Unit* unit, u16 x, u16 y, u16 disp) {
@@ -1565,11 +1601,11 @@ void sub_8099F7C(struct Text* th, u16 * tm, struct Unit* unit, u16 flags) {
             Text_DrawString(th, GetItemName(item));
         }
 
-        DrawIcon(tm + i * 0x40, GetItemIconId(item), 0x4000);
+        DrawIcon(TILEMAP_LOCATED(tm, 0, i * 2), GetItemIconId(item), OAM2_PAL(4));
 
-        PutText(th, tm + 2 + i * 0x40);
+        PutText(th, TILEMAP_LOCATED(tm, 2, i * 2));
 
-        PutNumberOrBlank(tm + 11 + i * 0x40, !isUnusable ? TEXT_COLOR_SYSTEM_BLUE : TEXT_COLOR_SYSTEM_GRAY, GetItemUses(item));
+        PutNumberOrBlank(TILEMAP_LOCATED(tm, 11, i * 2), !isUnusable ? TEXT_COLOR_SYSTEM_BLUE : TEXT_COLOR_SYSTEM_GRAY, GetItemUses(item));
     }
 
     return;
@@ -1582,14 +1618,14 @@ void sub_809A08C(struct PrepItemScreenProc* proc) {
     int c = ((PrepGetUnitAmount() - 1) / 3) * 16;
     int d = b - proc->unk_34;
 
-    if (d >= 33) {
+    if (d > 32) {
         if (b == c) {
             proc->unk_34 = b - 48;
         } else {
             proc->unk_34 = b - 32;
         }
     } else {
-        if (d <= 0xf) {
+        if (d < 16) {
             if (b == 0) {
                 proc->unk_34 = b;
             } else {
@@ -1598,7 +1634,7 @@ void sub_809A08C(struct PrepItemScreenProc* proc) {
         }
     }
 
-    BG_SetPosition(2, -40, (proc->unk_34 - 4) & 0xff);
+    BG_SetPosition(BG_2, -40, (proc->unk_34 - 4) & 0xff);
     UpdateMenuScrollBarConfig(6, proc->unk_34, ((PrepGetUnitAmount() - 1) / 3) + 1, 4);
     return;
 }
@@ -1615,7 +1651,7 @@ void sub_809A114(struct PrepItemScreenProc* proc, u8 unk, s8 flag) {
     int y;
 
     idx = ((unk) * 3);
-    th = &gPrepItemTexts[idx % 0xf];
+    th = &gPrepItemTexts[idx % 15];
 
     if (gGMData.state.bits.state_0 && GetGMapBaseMenuKind() == 2) {
         isWorldMapMaybe = 1;
@@ -1636,7 +1672,8 @@ void sub_809A114(struct PrepItemScreenProc* proc, u8 unk, s8 flag) {
         }
 
         x = ((i % 3) * 8);
-        y = ((unk * 2)) & 0x1f;
+        y = ((unk * 2)) & 31;
+
         if (flag == 0) {
             struct Unit* unit = GetUnitFromPrepList(newIdx);
 
@@ -1658,7 +1695,7 @@ void sub_809A114(struct PrepItemScreenProc* proc, u8 unk, s8 flag) {
         PutText(th, TILEMAP_LOCATED(gBG2TilemapBuffer, x, y));
     }
 
-    BG_EnableSyncByMask(4);
+    BG_EnableSyncByMask(BG2_SYNC_BIT);
 
     return;
 }
@@ -1729,17 +1766,17 @@ void PrepItemDrawPopupBox(int x, int y, int w, int h, int oam2) {
 
     PutSpriteExt(4, x, y, gObject_8x8, oam2 + 0);
     PutSpriteExt(4, x + w * 8, y, gObject_8x8, oam2 + 3);
-    PutSpriteExt(4, x + w * 8, y + h * 8, gObject_8x8, oam2 + 0xd);
-    PutSpriteExt(4, x, y + h * 8, gObject_8x8, oam2 + 0xa);
+    PutSpriteExt(4, x + w * 8, y + h * 8, gObject_8x8, oam2 + 13);
+    PutSpriteExt(4, x, y + h * 8, gObject_8x8, oam2 + 10);
 
     for (j = 1; j < (w - 1); j += 2) {
         PutSpriteExt(4, x + j * 8, y, gObject_16x8, oam2 + 1);
-        PutSpriteExt(4, x + j * 8, y + h * 8, gObject_16x8, oam2 + 0xb);
+        PutSpriteExt(4, x + j * 8, y + h * 8, gObject_16x8, oam2 + 11);
     }
 
     for (; j < w; j++) {
         PutSpriteExt(4, x + j * 8, y, gObject_8x8, oam2 + 1);
-        PutSpriteExt(4, x + j * 8, y + h * 8, gObject_8x8, oam2 + 0xb);
+        PutSpriteExt(4, x + j * 8, y + h * 8, gObject_8x8, oam2 + 11);
     }
 
     for (i = 1; i < h; i++) {
@@ -1796,9 +1833,9 @@ bool PrepItemScreen_GiveAll(struct Unit * unit)
 // Unused?
 u16 CONST_DATA gSprite_08A18E1C[] = {
     3,
-    0x4000, 0x0000, 0x0800,
-    0x4008, 0x0000, 0x0806,
-    0x4010, 0x0000, 0x080C,
+    OAM0_SHAPE_16x8, OAM1_SIZE_16x8, OAM2_LAYER(2),
+    OAM0_SHAPE_16x8 + OAM0_Y(8), OAM1_SIZE_16x8, OAM2_CHR(0x6) + OAM2_LAYER(2),
+    OAM0_SHAPE_16x8 + OAM0_Y(16), OAM1_SIZE_16x8, OAM2_CHR(0xC) + OAM2_LAYER(2),
 };
 
 // Unused?
