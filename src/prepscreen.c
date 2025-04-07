@@ -140,10 +140,10 @@ void sub_80950E8(int vram, int palId)
 {
     u16 * palettes[4] =
     {
-        Pal_08A1D850,
-        Pal_08A1D870,
-        Pal_08A1D890,
-        Pal_08A1D8B0,
+        Pal_PrepWindowA,
+        Pal_PrepWindowB,
+        Pal_PrepWindowC,
+        Pal_PrepWindowD,
     };
 
     Decompress(Img_PrepWindow, (void *)(vram + 0x6000000));

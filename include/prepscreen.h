@@ -273,14 +273,14 @@ extern u16 CONST_DATA Img_SysBrownBox[];
 extern u16 CONST_DATA Pal_SysBrownBox[];
 extern u16 CONST_DATA gPal_SupportScreenBanner[];
 extern u16 CONST_DATA gUnknown_08A1B194[];
-extern u8 gUnknown_08A1B1FC[]; // gfx
-extern u16 gUnknown_08A1B638[]; // pal
+extern u8 Img_PrepFunds[]; // gfx
+extern u16 Pal_PrepFunds[]; // pal
 extern u8 CONST_DATA gUnknown_08A1B658[];
 extern u8 CONST_DATA gUnknown_08A1B698[];
 extern u8 CONST_DATA gUnknown_08A1B730[];
 extern u8 CONST_DATA gUnknown_08A1B7C8[];
-extern u8 gUnknown_08A1B8B8[]; // tsa
-extern u8 gUnknown_08A1B990[]; // tsa
+extern u8 Tsa_PrepItemScreen[]; // tsa
+extern u8 Tsa_08A1B990[]; // tsa
 extern u8 gUnknown_08A1B9EC[]; // tsa
 extern u16 CONST_DATA Img_PrepItemUseScreen[];
 extern u16 CONST_DATA Tsa_PrepItemUseScreen[];
@@ -301,10 +301,10 @@ extern u8 Img_PrepTextShadow[];
 extern u8 CONST_DATA gUnknown_08A1D510[];
 extern u16 CONST_DATA Pal_MapBattleInfoNum[]; // 'R is info' palette
 extern u8 Img_PrepPopupWindow[];
-extern u16 Pal_08A1D850[];
-extern u16 Pal_08A1D870[];
-extern u16 Pal_08A1D890[];
-extern u16 Pal_08A1D8B0[];
+extern u16 Pal_PrepWindowA[];
+extern u16 Pal_PrepWindowB[];
+extern u16 Pal_PrepWindowC[];
+extern u16 Pal_PrepWindowD[];
 extern u8 Img_PrepWindow[];
 extern u8 gUnknown_08A1DB80[];
 extern u8 gTsa_SupportSubScreen[];
@@ -560,7 +560,7 @@ void MenuScroll_Init(struct MenuScrollBarProc * proc);
 void MenuScroll_Loop(struct MenuScrollBarProc * proc);
 
 void LockMenuScrollBar(void);
-void sub_8097668(void);
+void UnlockMenuScrollBar(void);
 void EndMenuScrollBar(void);
 ProcPtr StartMenuScrollBar(ProcPtr);
 void PutMenuScrollBarAt(int, int);
@@ -622,13 +622,13 @@ struct PrepItemScreenProc {
     /* 2A */ u8 hoverUnitIdx;
     /* 2B */ u8 selectedUnitIdx;
     /* 2C */ s8 hasConvoyAccess;
-    /* 2D */ u8 unk_2d; // popup prompt R-text index, when R is pressed
+    /* 2D */ u8 helpboxActiveIdx; // popup prompt R-text index, when R is pressed
     /* 2E */ u8 popupPromptIdx;
     /* 2F */ u8 unk_2f; // unreferenced
     /* 30 */ u8 unk_30; // unreferenced
     /* 31 */ u8 scrollAmount;
     /* 32 */ s8 unitSelected; // opens the popup prompt for Trade/List/Use/etc.
-    /* 34 */ u16 unk_34;
+    /* 34 */ u16 scrollOffset;
     /* 36 */ u16 unk_36; // unreferenced
     /* 38 */ u16 xFacePosBySlot[2];
     /* 3C */ u16 yFacePosBySlot[2];
@@ -670,8 +670,8 @@ void PrepItemScreen_DrawFunds(void);
 void PrepItemScreen_HideFunds(void);
 void PrepItemScreen_SetupGfx(struct PrepItemScreenProc * proc);
 void PrepItemScreen_OnEnd(struct PrepItemScreenProc * proc);
-void sub_8098A04(u16 * tm);
-void sub_8098A74(u16 * tm);
+void PutPrepItemScreenPromptText(u16 * tm);
+void PutWmItemScreenPromptText(u16 * tm);
 void sub_8098B48(void);
 void sub_8098B68(void);
 void sub_8098BA8(void);
@@ -686,7 +686,7 @@ void PrepItemScreen_StartStatScreen(struct PrepItemScreenProc *);
 void PrepItemScreen_ResumeFromStatScreen(struct PrepItemScreenProc *);
 void sub_8099120(struct PrepItemScreenProc *);
 void sub_8099328(struct PrepItemScreenProc* proc, u16 * tm, struct Unit * unit);
-void sub_80994C4(struct PrepItemScreenProc *);
+void PrepItemScreen_DrawSelectedUnitDetails(struct PrepItemScreenProc *);
 void sub_80995D4(struct PrepItemScreenProc *);
 void sub_8099654(struct PrepItemScreenProc *);
 void sub_80996B0(struct PrepItemScreenProc *);
@@ -705,11 +705,11 @@ void sub_8099E68(struct PrepItemScreenProc * proc);
 void UpdatePrepItemScreenFace(int, struct Unit*, u16, u16, u16);
 void EndPrepItemScreenFace(int);
 ProcPtr StartPrepItemScreen(ProcPtr);
-void sub_8099F7C(struct Text*, u16*, struct Unit*, u16);
+void PrepItemScreen_DrawUnitItems(struct Text*, u16*, struct Unit*, u16);
 void sub_809A08C(struct PrepItemScreenProc *);
 void sub_809A114(struct PrepItemScreenProc *, u8, s8);
-s8 sub_809A21C(u32, int);
-void sub_809A230(struct Unit * unit, u16 x, u16 y);
+bool IsCoordHiddenByMinimug(u32, int);
+void PutClassSpriteForSecretShop(struct Unit * unit, u16 x, u16 y);
 void sub_809A274(struct PrepItemScreenProc *);
 void PrepItemDrawPopupBox(int x, int y, int w, int h, int oam2);
 void sub_809A504(struct PrepItemScreenProc *, u8);

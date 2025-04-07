@@ -581,7 +581,7 @@ void SupportScreen_SetupGraphics(struct SupportScreenProc* proc) {
 
     UpdateMenuScrollBarConfig(10, proc->unk_34, ((GetSupportScreenUnitCount() - 1) / 3) + 1, 6);
 
-    sub_8097668();
+    UnlockMenuScrollBar();
 
     for (i = proc->unk_34 / 16; i < (proc->unk_34 / 16) + 6; i++) {
         sub_80A199C(proc, i);

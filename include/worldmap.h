@@ -645,7 +645,7 @@ void NULL_080B9F08(void);
 void WorldMap_StartArmory(ProcPtr proc);
 void WorldMap_StartVendor(ProcPtr proc);
 void WorldMap_StartSecretShop(ProcPtr proc);
-void sub_80B9F44(ProcPtr proc);
+void WorldMap_StartManageItems(ProcPtr proc);
 void WorldMap_UpdateBgm(ProcPtr unused);
 void UpdateWorldMapBgm(void);
 void sub_80B9FD4(ProcPtr);
