@@ -121,7 +121,7 @@ void sub_8095C00(int msg, ProcPtr parent)
 void sub_8095C2C(struct ProcAtMenu * proc)
 {
     EndSysBlackBoxs();
-    EndPrepSpecialCharEffect();
+    EndPrepScreenSpriteDraw();
     EndMuralBackground_();
     proc->cur_cmd = GetActivePrepMenuItemIndex();
     EndPrepScreenMenu();
@@ -187,7 +187,7 @@ void AtMenu_Reinitialize(struct ProcAtMenu* proc)
     BG_EnableSyncByMask(0xF);
     SetDefaultColorEffects();
 
-    StartPrepSpecialCharEffect(proc);
+    StartPrepScreenSpriteDraw(proc);
     RestartMuralBackground();
     ApplyPalettes(gUiFramePaletteB, 0x2, 3);
 
@@ -384,7 +384,7 @@ void AtMenuSetUnitStateAndEndFlag(struct ProcAtMenu * proc)
 void AtMenu_ResetScreenEffect(struct ProcAtMenu * proc)
 {
     EndMuralBackground_();
-    EndPrepSpecialCharEffect();
+    EndPrepScreenSpriteDraw();
     SetupBackgrounds(0);
     SetBlendConfig(3, 0, 0, 0x10);
     SetBlendTargetA(1, 1, 1, 1, 1);

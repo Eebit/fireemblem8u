@@ -207,7 +207,7 @@ extern CONST_DATA u16 Sprite_PrepTower[];
 extern CONST_DATA u16 Sprite_PrepRuins[];
 extern CONST_DATA u16 Sprite_PrepExMap[];
 extern CONST_DATA u16 * SpriteArray_PrepChapterNumbers[];
-extern CONST_DATA struct ProcCmd ProcScr_PrepSpecialCharEff[];
+extern CONST_DATA struct ProcCmd ProcScr_PrepScreenSpriteDraw[];
 extern CONST_DATA struct ProcCmd ProcScr_PrepScreenMenuDummyItem[];
 extern CONST_DATA struct ProcCmd ProcScr_PrepMenu[];
 extern CONST_DATA u16 gSprite_MenuScrollContainer[];
@@ -458,7 +458,7 @@ enum
     PREP_KIND_SKIRMISH = 4,
 };
 
-struct ProcPrepSpecialChar
+struct PrepSpriteDrawProc
 {
      PROC_HEADER;
     /* 29 */ STRUCT_PAD(0x29, 0x2A);
@@ -469,17 +469,17 @@ struct ProcPrepSpecialChar
     /* 30 */ u8 kind;
     /* 31 */ u8 unk31;
     /* 32 */ u8 unk32;
-    /* 33 */ u8 blink_Start;
-    /* 34 */ u8 blink_B;
+    /* 33 */ u8 buttonStartSolid;
+    /* 34 */ u8 buttonBSolid;
     /* 35 */ u8 unk35;
     /* 36 */ u16 timer;
     /* 38 */ ProcPtr apProc;
 };
 
-void sub_8096958(struct ProcPrepSpecialChar *proc);
-void ProcPrepSpChar_OnInit(struct ProcPrepSpecialChar *proc);
-void ProcPrepSpChar_Idle(struct ProcPrepSpecialChar *proc);
-void ProcPrepSpChar_OnEnd(struct ProcPrepSpecialChar *proc);
+void DrawPrepScreenSprites(struct PrepSpriteDrawProc *proc);
+void PrepSpriteDraw_Init(struct PrepSpriteDrawProc *proc);
+void PrepSpriteDraw_Loop(struct PrepSpriteDrawProc *proc);
+void PrepSpriteDraw_OnEnd(struct PrepSpriteDrawProc *proc);
 
 struct Unit * GetUnitFromPrepList(int index);
 void RegisterPrepUnitList(int index, struct Unit *);
@@ -506,10 +506,10 @@ int PrepGetDeployedUnitAmt(void);
 void PrepAutoCapDeployUnits(struct ProcAtMenu* proc);
 void RestartMuralBackground();
 void EndMuralBackground_(void);
-void PrepSpecialChar_BlinkButtonStart();
-void PrepSpecialChar_BlinkButtonB();
-ProcPtr StartPrepSpecialCharEffect(ProcPtr parent);
-void EndPrepSpecialCharEffect(void);
+void PrepSpriteDraw_BlinkButtonStart();
+void PrepSpriteDraw_BlinkButtonB();
+ProcPtr StartPrepScreenSpriteDraw(ProcPtr parent);
+void EndPrepScreenSpriteDraw(void);
 // ??? sub_8096C34(???);
 
 struct ProcPrepMenu {

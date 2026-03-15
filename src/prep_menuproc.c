@@ -158,6 +158,7 @@ void PutPrepChapterSprite_Tower(int xOam1, int yOam0, int prepChapterNum, u16 oa
         xOam1 -= 4;
         PutSpriteExt(4, xOam1 + 64, yOam0, SpriteArray_PrepChapterNumbers[10], oam2);
     }
+
     PutSpriteExt(4, xOam1, yOam0, Sprite_PrepTower, oam2);
 
     // Remove Gaiden bit and extract actual chapter number
@@ -200,7 +201,7 @@ void PutPrepChapterSprite_Skirmish(int xOam1, int yOam0, u16 oam2)
     PutSpriteExt(4, xOam1, yOam0, Sprite_PrepExMap, oam2);
 }
 
-void sub_8096958(struct ProcPrepSpecialChar * proc)
+void DrawPrepScreenSprites(struct PrepSpriteDrawProc * proc)
 {
     int i;
 
@@ -235,10 +236,10 @@ void sub_8096958(struct ProcPrepSpecialChar * proc)
         for (i = 0; i < 3; i++)
             PutSpriteExt(4, 128 + i * 32, 24, gObject_32x16, OAM2_CHR(0x2C0) + OAM2_LAYER(1) + OAM2_PAL(11) + 4 * i);
 
-        if (proc->blink_Start || (1 & (proc->timer >> 2)))
+        if (proc->buttonStartSolid || (1 & (proc->timer >> 2)))
             PutSpriteExt(4, 20, 140, Sprite_PrepStartButton, OAM2_CHR(0x300));
 
-        if (proc->blink_B || (1 & (proc->timer >> 2)))
+        if (proc->buttonBSolid || (1 & (proc->timer >> 2)))
             PutSpriteExt(4, 100, 140, Sprite_PrepBButton, OAM2_CHR(0x300));
 
         PutPrepInformationSprite(116, 40, OAM2_CHR(0x380) + OAM2_PAL(9));
@@ -252,7 +253,7 @@ void sub_8096958(struct ProcPrepSpecialChar * proc)
     }
 }
 
-void ProcPrepSpChar_OnInit(struct ProcPrepSpecialChar * proc)
+void PrepSpriteDraw_Init(struct PrepSpriteDrawProc * proc)
 {
     u32 chIndex;
 
@@ -287,46 +288,46 @@ void ProcPrepSpChar_OnInit(struct ProcPrepSpecialChar * proc)
     }
 
     proc->unk2B = 0;
-    proc->blink_Start = 1;
-    proc->blink_B = 1;
+    proc->buttonStartSolid = true;
+    proc->buttonBSolid = true;
 }
 
-void ProcPrepSpChar_Idle(struct ProcPrepSpecialChar * proc)
+void PrepSpriteDraw_Loop(struct PrepSpriteDrawProc * proc)
 {
-    sub_8096958(proc);
+    DrawPrepScreenSprites(proc);
     proc->timer++;
 }
 
-void ProcPrepSpChar_OnEnd(struct ProcPrepSpecialChar * proc)
+void PrepSpriteDraw_OnEnd(struct PrepSpriteDrawProc * proc)
 {
     APProc_Delete(proc->apProc);
 }
 
-void PrepSpecialChar_BlinkButtonStart(void)
+void PrepSpriteDraw_BlinkButtonStart(void)
 {
-    struct ProcPrepSpecialChar * proc = Proc_Find(ProcScr_PrepSpecialCharEff);
+    struct PrepSpriteDrawProc * proc = Proc_Find(ProcScr_PrepScreenSpriteDraw);
 
     if (proc != NULL)
-        proc->blink_Start = 0;
+        proc->buttonStartSolid = false;
 }
 
-void PrepSpecialChar_BlinkButtonB(void)
+void PrepSpriteDraw_BlinkButtonB(void)
 {
-    struct ProcPrepSpecialChar * proc = Proc_Find(ProcScr_PrepSpecialCharEff);
+    struct PrepSpriteDrawProc * proc = Proc_Find(ProcScr_PrepScreenSpriteDraw);
 
     if (proc != NULL)
-        proc->blink_B = 0;
+        proc->buttonBSolid = false;
 }
 
-ProcPtr StartPrepSpecialCharEffect(ProcPtr parent)
+ProcPtr StartPrepScreenSpriteDraw(ProcPtr parent)
 {
-    Proc_End(Proc_Find(ProcScr_PrepSpecialCharEff));
-    return Proc_Start(ProcScr_PrepSpecialCharEff, parent);
+    Proc_End(Proc_Find(ProcScr_PrepScreenSpriteDraw));
+    return Proc_Start(ProcScr_PrepScreenSpriteDraw, parent);
 }
 
-void EndPrepSpecialCharEffect(void)
+void EndPrepScreenSpriteDraw(void)
 {
-    Proc_End(Proc_Find(ProcScr_PrepSpecialCharEff));
+    Proc_End(Proc_Find(ProcScr_PrepScreenSpriteDraw));
 }
 
 void sub_8096C34(int a1, int a2)
@@ -1000,12 +1001,12 @@ CONST_DATA u16 * objs_8A1864C[] =
     objs_8A1864C_4
 };
 
-CONST_DATA struct ProcCmd ProcScr_PrepSpecialCharEff[] =
+CONST_DATA struct ProcCmd ProcScr_PrepScreenSpriteDraw[] =
 {
     PROC_YIELD,
-    PROC_CALL(ProcPrepSpChar_OnInit),
-    PROC_SET_END_CB(ProcPrepSpChar_OnEnd),
-    PROC_REPEAT(ProcPrepSpChar_Idle),
+    PROC_CALL(PrepSpriteDraw_Init),
+    PROC_SET_END_CB(PrepSpriteDraw_OnEnd),
+    PROC_REPEAT(PrepSpriteDraw_Loop),
     PROC_END
 };
 
