@@ -124,66 +124,80 @@ void PutPrepInformationSprite(int xOam1, int yOam0, u16 oam2)
     PutSpriteExt(4, xOam1, yOam0, Sprite_PrepInformation, oam2);
 }
 
-void PutPrepChapterSprite_Default(int xOam1, int yOam0, int a3, u16 oam2)
+void PutPrepChapterSprite_Default(int xOam1, int yOam0, int prepChapterNum, u16 oam2)
 {
-    int val;
-    if (1 & a3)
+    int chapterNum;
+
+    // If this is a Gaiden chapter (odd prepChapterNum), display "X"
+    if (prepChapterNum & 1)
     {
         xOam1 -= 4;
         PutSpriteExt(4, xOam1 + 64, yOam0, SpriteArray_PrepChapterNumbers[10], oam2);
     }
+
     PutSpriteExt(4, xOam1, yOam0, Sprite_PrepChapter, oam2);
 
-    val = a3 >> 1;
-    if (val < 10)
+    // Remove Gaiden bit and extract actual chapter number
+    chapterNum = prepChapterNum >> 1;
+
+    if (chapterNum < 10)
         PutSpriteExt(4, xOam1 + 48, yOam0, SpriteArray_PrepChapterNumbers[11], oam2);
     else
-        PutSpriteExt(4, xOam1 + 48, yOam0, SpriteArray_PrepChapterNumbers[val / 10], oam2);
+        PutSpriteExt(4, xOam1 + 48, yOam0, SpriteArray_PrepChapterNumbers[chapterNum / 10], oam2);
 
-    PutSpriteExt(4, xOam1 + 56, yOam0, SpriteArray_PrepChapterNumbers[val % 10], oam2);
+    PutSpriteExt(4, xOam1 + 56, yOam0, SpriteArray_PrepChapterNumbers[chapterNum % 10], oam2);
 }
 
-void PutPrepChapterSprite_Tower(int xOam1, int yOam0, int a3, u16 oam2)
+void PutPrepChapterSprite_Tower(int xOam1, int yOam0, int prepChapterNum, u16 oam2)
 {
-    int val;
-    if (1 & a3)
+    int chapterNum;
+
+    // If this is a Gaiden chapter (odd prepChapterNum), display "X"
+    if (prepChapterNum & 1)
     {
         xOam1 -= 4;
         PutSpriteExt(4, xOam1 + 64, yOam0, SpriteArray_PrepChapterNumbers[10], oam2);
     }
-    PutSpriteExt(4, xOam1, yOam0, obj_8A18590, oam2);
+    PutSpriteExt(4, xOam1, yOam0, Sprite_PrepTower, oam2);
 
-    val = a3 >> 1;
-    if (val < 10)
-        PutSpriteExt(4, xOam1 + 48, yOam0, SpriteArray_PrepChapterNumbers[0xB], oam2);
+    // Remove Gaiden bit and extract actual chapter number
+    chapterNum = prepChapterNum >> 1;
+
+    if (chapterNum < 10)
+        PutSpriteExt(4, xOam1 + 48, yOam0, SpriteArray_PrepChapterNumbers[11], oam2);
     else
-        PutSpriteExt(4, xOam1 + 48, yOam0, SpriteArray_PrepChapterNumbers[val / 10], oam2);
+        PutSpriteExt(4, xOam1 + 48, yOam0, SpriteArray_PrepChapterNumbers[chapterNum / 10], oam2);
 
-    PutSpriteExt(4, xOam1 + 56, yOam0, SpriteArray_PrepChapterNumbers[val % 10], oam2);
+    PutSpriteExt(4, xOam1 + 56, yOam0, SpriteArray_PrepChapterNumbers[chapterNum % 10], oam2);
 }
 
-void PutPrepChapterSprite_Ruins(int xOam1, int yOam0, int a3, u16 oam2)
+void PutPrepChapterSprite_Ruins(int xOam1, int yOam0, int prepChapterNum, u16 oam2)
 {
-    int val;
-    if (1 & a3)
+    int chapterNum;
+
+    // If this is a Gaiden chapter (odd prepChapterNum), display "X"
+    if (prepChapterNum & 1)
     {
         xOam1 -= 4;
         PutSpriteExt(4, xOam1 + 60, yOam0, SpriteArray_PrepChapterNumbers[10], oam2);
     }
-    PutSpriteExt(4, xOam1 + 4, yOam0, obj_8A1859E, oam2);
 
-    val = a3 >> 1;
-    if (val < 10)
+    PutSpriteExt(4, xOam1 + 4, yOam0, Sprite_PrepRuins, oam2);
+
+    // Remove Gaiden bit and extract actual chapter number
+    chapterNum = prepChapterNum >> 1;
+
+    if (chapterNum < 10)
         PutSpriteExt(4, xOam1 + 44, yOam0, SpriteArray_PrepChapterNumbers[11], oam2);
     else
-        PutSpriteExt(4, xOam1 + 44, yOam0, SpriteArray_PrepChapterNumbers[val / 10], oam2);
+        PutSpriteExt(4, xOam1 + 44, yOam0, SpriteArray_PrepChapterNumbers[chapterNum / 10], oam2);
 
-    PutSpriteExt(4, xOam1 + 52, yOam0, SpriteArray_PrepChapterNumbers[val % 10], oam2);
+    PutSpriteExt(4, xOam1 + 52, yOam0, SpriteArray_PrepChapterNumbers[chapterNum % 10], oam2);
 }
 
 void PutPrepChapterSprite_Skirmish(int xOam1, int yOam0, u16 oam2)
 {
-    PutSpriteExt(4, xOam1, yOam0, obj_8A185AC, oam2);
+    PutSpriteExt(4, xOam1, yOam0, Sprite_PrepExMap, oam2);
 }
 
 void sub_8096958(struct ProcPrepSpecialChar * proc)
@@ -195,25 +209,25 @@ void sub_8096958(struct ProcPrepSpecialChar * proc)
 
     if (!CheckInLinkArena())
     {
-    switch (proc->unk30)
-    {
-        case 1:
-            PutPrepChapterSprite_Default(xOam1, yOam0, proc->unk2F, OAM2_CHR(0x380) + OAM2_PAL(6));
+        switch (proc->kind)
+        {
+        case PREP_KIND_STANDARD:
+            PutPrepChapterSprite_Default(xOam1, yOam0, proc->prepChapterNum, OAM2_CHR(0x380) + OAM2_PAL(6));
             break;
 
-        case 2:
-            PutPrepChapterSprite_Tower(xOam1, yOam0, proc->unk2F, OAM2_CHR(0x380) + OAM2_PAL(6));
+        case PREP_KIND_TOWER:
+            PutPrepChapterSprite_Tower(xOam1, yOam0, proc->prepChapterNum, OAM2_CHR(0x380) + OAM2_PAL(6));
             break;
 
-        case 3:
-            PutPrepChapterSprite_Ruins(xOam1, yOam0, proc->unk2F, OAM2_CHR(0x380) + OAM2_PAL(6));
+        case PREP_KIND_RUINS:
+            PutPrepChapterSprite_Ruins(xOam1, yOam0, proc->prepChapterNum, OAM2_CHR(0x380) + OAM2_PAL(6));
             break;
 
-        case 4:
+        case PREP_KIND_SKIRMISH:
             PutPrepChapterSprite_Skirmish(xOam1, yOam0, OAM2_CHR(0x380) + OAM2_PAL(6));
             break;
 
-        case 0:
+        case PREP_KIND_FINAL_MAP:
         default:
             break;
         }
@@ -221,10 +235,10 @@ void sub_8096958(struct ProcPrepSpecialChar * proc)
         for (i = 0; i < 3; i++)
             PutSpriteExt(4, 128 + i * 32, 24, gObject_32x16, OAM2_CHR(0x2C0) + OAM2_LAYER(1) + OAM2_PAL(11) + 4 * i);
 
-        if (proc->blink_Start || (1 & (proc->unk36 >> 2)))
+        if (proc->blink_Start || (1 & (proc->timer >> 2)))
             PutSpriteExt(4, 20, 140, Sprite_PrepStartButton, OAM2_CHR(0x300));
 
-        if (proc->blink_B || (1 & (proc->unk36 >> 2)))
+        if (proc->blink_B || (1 & (proc->timer >> 2)))
             PutSpriteExt(4, 100, 140, Sprite_PrepBButton, OAM2_CHR(0x300));
 
         PutPrepInformationSprite(116, 40, OAM2_CHR(0x380) + OAM2_PAL(9));
@@ -243,7 +257,7 @@ void ProcPrepSpChar_OnInit(struct ProcPrepSpecialChar * proc)
     u32 chIndex;
 
     proc->unk2A = 0;
-    proc->unk36 = 0;
+    proc->timer = 0;
 
     ForceSyncUnitSpriteSheet();
 
@@ -259,17 +273,17 @@ void ProcPrepSpChar_OnInit(struct ProcPrepSpecialChar * proc)
 
         chIndex = gPlaySt.chapterIndex;
         if ((chIndex - 0x24) < 10)
-            proc->unk30 = 2;
+            proc->kind = PREP_KIND_TOWER;
         else if ((chIndex - 0x2E) < 10)
-            proc->unk30 = 3;
+            proc->kind = PREP_KIND_RUINS;
         else if (IsChapterMonsterSpawnActive(chIndex))
-            proc->unk30 = 4;
+            proc->kind = PREP_KIND_SKIRMISH;
         else if (chIndex - 0x15 <= 1 || chIndex == 0x22 || chIndex == 0x23)
-            proc->unk30 = 0;
+            proc->kind = PREP_KIND_FINAL_MAP;
         else
-            proc->unk30 = 1;
+            proc->kind = PREP_KIND_STANDARD;
 
-        proc->unk2F = GetROMChapterStruct(chIndex)->prepScreenNumber;
+        proc->prepChapterNum = GetROMChapterStruct(chIndex)->prepScreenNumber;
     }
 
     proc->unk2B = 0;
@@ -280,7 +294,7 @@ void ProcPrepSpChar_OnInit(struct ProcPrepSpecialChar * proc)
 void ProcPrepSpChar_Idle(struct ProcPrepSpecialChar * proc)
 {
     sub_8096958(proc);
-    proc->unk36++;
+    proc->timer++;
 }
 
 void ProcPrepSpChar_OnEnd(struct ProcPrepSpecialChar * proc)
@@ -783,7 +797,6 @@ PROC_LABEL(200),
     PROC_END
 };
 
-/* UNK */
 CONST_DATA u16 gUnknown_08A1852C[] =
 {
     1,
@@ -838,21 +851,21 @@ CONST_DATA u16 Sprite_PrepChapter[] =
     OAM0_SHAPE_16x16, OAM1_SIZE_16x16 + OAM1_X(+32), OAM2_CHR(0x4) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 obj_8A18590[] =
+CONST_DATA u16 Sprite_PrepTower[] =
 {
     2,
     OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_CHR(0x40) + OAM2_LAYER(1),
     OAM0_SHAPE_16x16, OAM1_SIZE_16x16 + OAM1_X(+32), OAM2_CHR(0x44) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 obj_8A1859E[] =
+CONST_DATA u16 Sprite_PrepRuins[] =
 {
     2,
     OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_CHR(0x46) + OAM2_LAYER(1),
     OAM0_SHAPE_8x16, OAM1_SIZE_8x16 + OAM1_X(+32), OAM2_CHR(0x4A) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 obj_8A185AC[] =
+CONST_DATA u16 Sprite_PrepExMap[] =
 {
     2,
     OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_CHR(0x4B) + OAM2_LAYER(1),
