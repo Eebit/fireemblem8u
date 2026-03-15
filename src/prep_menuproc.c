@@ -720,7 +720,11 @@ void EnablePrepScreenMenu()
 
 
 /* section.data */
-CONST_DATA struct ProcCmd ProcScr_PrepPromoteDebug[] = {
+
+// clang-format off
+
+CONST_DATA struct ProcCmd ProcScr_PrepPromoteDebug[] =
+{
     PROC_WHILE(MusicProc4Exists),
     PROC_CALL(DoPromoteAnimForChar100),
     PROC_REPEAT(IsGameLockLevelReserved),
@@ -731,7 +735,8 @@ CONST_DATA struct ProcCmd ProcScr_PrepPromoteDebug[] = {
     PROC_END
 };
 
-CONST_DATA struct ProcCmd ProcScr_PrepTraineePromo[] = {
+CONST_DATA struct ProcCmd ProcScr_PrepTraineePromo[] =
+{
     PROC_CALL(AtMenu_LockGame),
     PROC_CALL(StartTraineePromoScreen),
     PROC_YIELD,
@@ -743,116 +748,148 @@ PROC_LABEL(200),
 };
 
 /* UNK */
-CONST_DATA u16 gUnknown_08A1852C[] = {
-    0x0001,
-    0x4000, 0x8000, 0x7780,
+CONST_DATA u16 gUnknown_08A1852C[] =
+{
+    1,
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_CHR(0x380) + OAM2_LAYER(1) + OAM2_PAL(7),
 };
 
-CONST_DATA u16 gUnknown_08A18534[] = {
-    0x0002,
-    0x4000, 0x8000, 0x77C0,
-    0x4000, 0x8020, 0x77C4,
+CONST_DATA u16 gUnknown_08A18534[] =
+{
+    2,
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_CHR(0x3C0) + OAM2_LAYER(1) + OAM2_PAL(7),
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16 + OAM1_X(+32), OAM2_CHR(0x3C4) + OAM2_LAYER(1) + OAM2_PAL(7),
 };
 
-CONST_DATA u16 gUnknown_08A18542[] = {
-    0x0002,
-    0x4000, 0x6000, 0x6798,
-    0x4000, 0xA020, 0x679C,
+CONST_DATA u16 gUnknown_08A18542[] =
+{
+    2,
+    OAM0_SHAPE_32x8, OAM1_SIZE_32x8 + OAM1_VFLIP, OAM2_CHR(0x398) + OAM2_LAYER(1) + OAM2_PAL(6),
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16 + OAM1_X(+32) + OAM1_VFLIP, OAM2_CHR(0x39C) + OAM2_LAYER(1) + OAM2_PAL(6),
 };
 
-CONST_DATA u16 gUnknown_08A18550[] = {
-    0x0002,
-    0x4000, 0x5020, 0x6798,
-    0x4000, 0x9000, 0x679C,
+CONST_DATA u16 gUnknown_08A18550[] =
+{
+    2,
+    OAM0_SHAPE_32x8, OAM1_SIZE_32x8 + OAM1_X(+32) + OAM1_HFLIP, OAM2_CHR(0x398) + OAM2_LAYER(1) + OAM2_PAL(6),
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16 + OAM1_HFLIP, OAM2_CHR(0x39C) + OAM2_LAYER(1) + OAM2_PAL(6),
 };
 
-CONST_DATA u16 gUnknown_08A1855E[] = {
-    0x0001,
-    0x4000, 0x8000, 0x6798,
+CONST_DATA u16 gUnknown_08A1855E[] =
+{
+    1,
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_CHR(0x398) + OAM2_LAYER(1) + OAM2_PAL(6),
 };
 
-CONST_DATA u16 gUnknown_08A18566[] = {
-    0x0001,
-    0x4000, 0x8000, 0x679C,
+CONST_DATA u16 gUnknown_08A18566[] =
+{
+    1,
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_CHR(0x39C) + OAM2_LAYER(1) + OAM2_PAL(6),
 };
 
-CONST_DATA u16 obj_8A1856E[] = {
-    0x0003,
-    0x4000, 0x8000, 0x0412,
-    0x4000, 0x8020, 0x0416,
-    0x0000, 0x4040, 0x041A,
+CONST_DATA u16 obj_8A1856E[] =
+{
+    3,
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_CHR(0x12) + OAM2_LAYER(1),
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16 + OAM1_X(+32), OAM2_CHR(0x16) + OAM2_LAYER(1),
+    OAM0_SHAPE_16x16, OAM1_SIZE_16x16 + OAM1_X(+64), OAM2_CHR(0x1A) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 obj_8A18582[] = {
-    0x0002,
-    0x4000, 0x8000, 0x0400,
-    0x0000, 0x4020, 0x0404,
+CONST_DATA u16 obj_8A18582[] =
+{
+    2,
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_LAYER(1),
+    OAM0_SHAPE_16x16, OAM1_SIZE_16x16 + OAM1_X(+32), OAM2_CHR(0x4) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 obj_8A18590[] = {
-    0x0002,
-    0x4000, 0x8000, 0x0440,
-    0x0000, 0x4020, 0x0444,
+CONST_DATA u16 obj_8A18590[] =
+{
+    2,
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_CHR(0x40) + OAM2_LAYER(1),
+    OAM0_SHAPE_16x16, OAM1_SIZE_16x16 + OAM1_X(+32), OAM2_CHR(0x44) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 obj_8A1859E[] = {
-    0x0002,
-    0x4000, 0x8000, 0x0446,
-    0x8000, 0x0020, 0x044A,
+CONST_DATA u16 obj_8A1859E[] =
+{
+    2,
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_CHR(0x46) + OAM2_LAYER(1),
+    OAM0_SHAPE_8x16, OAM1_SIZE_8x16 + OAM1_X(+32), OAM2_CHR(0x4A) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 obj_8A185AC[] = {
-    0x0002,
-    0x4000, 0x8000, 0x044B,
-    0x4000, 0x8020, 0x044F,
+CONST_DATA u16 obj_8A185AC[] =
+{
+    2,
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_CHR(0x4B) + OAM2_LAYER(1),
+    OAM0_SHAPE_32x16, OAM1_SIZE_32x16 + OAM1_X(+32), OAM2_CHR(0x4F) + OAM2_LAYER(1),
 };
 
-static CONST_DATA u16 objs_8A18614_1[] = {
-    0x0001,
-    0x8000, 0x0000, 0x0406,
-};
-static CONST_DATA u16 objs_8A18614_2[] = {
-    0x0001,
-    0x8000, 0x0000, 0x0407,
-};
-static CONST_DATA u16 objs_8A18614_3[] = {
-    0x0001,
-    0x8000, 0x0000, 0x0408,
-};
-static CONST_DATA u16 objs_8A18614_4[] = {
-    0x0001,
-    0x8000, 0x0000, 0x0409,
-};
-static CONST_DATA u16 objs_8A18614_5[] = {
-    0x0001,
-    0x8000, 0x0000, 0x040A,
-};
-static CONST_DATA u16 objs_8A18614_6[] = {
-    0x0001,
-    0x8000, 0x0000, 0x040B,
-};
-static CONST_DATA u16 objs_8A18614_7[] = {
-    0x0001,
-    0x8000, 0x0000, 0x040C,
-};
-static CONST_DATA u16 objs_8A18614_8[] = {
-    0x0001,
-    0x8000, 0x0000, 0x040D,
-};
-static CONST_DATA u16 objs_8A18614_9[] = {
-    0x0001,
-    0x8000, 0x0000, 0x040E,
-};
-static CONST_DATA u16 objs_8A18614_A[] = {
-    0x0001,
-    0x8000, 0x0000, 0x040F,
-};
-static CONST_DATA u16 objs_8A18614_B[] = {
-    0x0001,
-    0x8000, 0x0000, 0x0410,
+CONST_DATA u16 objs_8A18614_1[] =
+{
+    1,
+    OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0x6) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 *objs_8A18614[] = {
+CONST_DATA u16 objs_8A18614_2[] =
+{
+    1,
+    OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0x7) + OAM2_LAYER(1),
+};
+
+CONST_DATA u16 objs_8A18614_3[] =
+{
+    1,
+    OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0x8) + OAM2_LAYER(1),
+};
+
+CONST_DATA u16 objs_8A18614_4[] =
+{
+    1,
+    OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0x9) + OAM2_LAYER(1),
+};
+
+CONST_DATA u16 objs_8A18614_5[] =
+{
+    1,
+    OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0xA) + OAM2_LAYER(1),
+};
+
+CONST_DATA u16 objs_8A18614_6[] =
+{
+    1,
+    OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0xB) + OAM2_LAYER(1),
+};
+
+CONST_DATA u16 objs_8A18614_7[] =
+{
+    1,
+    OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0xC) + OAM2_LAYER(1),
+};
+
+CONST_DATA u16 objs_8A18614_8[] = {
+    1,
+    OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0xD) + OAM2_LAYER(1),
+};
+
+CONST_DATA u16 objs_8A18614_9[] =
+{
+    1,
+    OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0xE) + OAM2_LAYER(1),
+};
+
+CONST_DATA u16 objs_8A18614_A[] =
+{
+    1,
+    OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0xF) + OAM2_LAYER(1),
+};
+
+CONST_DATA u16 objs_8A18614_B[] =
+{
+    1,
+    OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0x10) + OAM2_LAYER(1),
+};
+
+CONST_DATA u16 * objs_8A18614[] =
+{
     objs_8A18614_1,
     objs_8A18614_2,
     objs_8A18614_3,
@@ -867,45 +904,55 @@ CONST_DATA u16 *objs_8A18614[] = {
     objs_8A18614_1
 };
 
-static CONST_DATA u16 obj_8A18644[] = {
-    0x0001,
-    0x0400, 0x8000, 0x0C80,
+CONST_DATA u16 obj_8A18644[] =
+{
+    1,
+    OAM0_SHAPE_32x32 + OAM0_BLEND, OAM1_SIZE_32x32, OAM2_CHR(0x80) + OAM2_LAYER(3),
 };
 
-static CONST_DATA u16 objs_8A1864C_1[] = {
-    0x0003,
-    0x4400, 0x8020, 0x0C94,
-    0x4400, 0x8048, 0x0C98,
-    0x0400, 0x4068, 0x0C9C,
-};
-static CONST_DATA u16 objs_8A1864C_2[] = {
-    0x0004,
-    0x4400, 0x8008, 0x0C94,
-    0x4400, 0x8030, 0x0CC4,
-    0x4400, 0x8050, 0x0CC8,
-    0x0400, 0x4070, 0x0CCC,
-};
-static CONST_DATA u16 objs_8A1864C_3[] = {
-    0x0004,
-    0x4400, 0x8000, 0x0C84,
-    0x4400, 0x8020, 0x0C88,
-    0x4400, 0x8040, 0x0C8C,
-    0x4400, 0x8060, 0x0C90,
-};
-static CONST_DATA u16 objs_8A1864C_4[] = {
-    0x0002,
-    0x4400, 0x8030, 0x0C94,
-    0x4400, 0x8058, 0x0CCE,
+CONST_DATA u16 objs_8A1864C_1[] =
+{
+    3,
+    OAM0_SHAPE_32x16 + OAM0_BLEND, OAM1_SIZE_32x16 + OAM1_X(+32), OAM2_CHR(0x94) + OAM2_LAYER(3),
+    OAM0_SHAPE_32x16 + OAM0_BLEND, OAM1_SIZE_32x16 + OAM1_X(+72), OAM2_CHR(0x98) + OAM2_LAYER(3),
+    OAM0_SHAPE_16x16 + OAM0_BLEND, OAM1_SIZE_16x16 + OAM1_X(+104), OAM2_CHR(0x9C) + OAM2_LAYER(3),
 };
 
-CONST_DATA u16 *objs_8A1864C[] = {
+CONST_DATA u16 objs_8A1864C_2[] =
+{
+    4,
+    OAM0_SHAPE_32x16 + OAM0_BLEND, OAM1_SIZE_32x16 + OAM1_X(+8), OAM2_CHR(0x94) + OAM2_LAYER(3),
+    OAM0_SHAPE_32x16 + OAM0_BLEND, OAM1_SIZE_32x16 + OAM1_X(+48), OAM2_CHR(0xC4) + OAM2_LAYER(3),
+    OAM0_SHAPE_32x16 + OAM0_BLEND, OAM1_SIZE_32x16 + OAM1_X(+80), OAM2_CHR(0xC8) + OAM2_LAYER(3),
+    OAM0_SHAPE_16x16 + OAM0_BLEND, OAM1_SIZE_16x16 + OAM1_X(+112), OAM2_CHR(0xCC) + OAM2_LAYER(3),
+};
+
+CONST_DATA u16 objs_8A1864C_3[] =
+{
+    4,
+    OAM0_SHAPE_32x16 + OAM0_BLEND, OAM1_SIZE_32x16, OAM2_CHR(0x84) + OAM2_LAYER(3),
+    OAM0_SHAPE_32x16 + OAM0_BLEND, OAM1_SIZE_32x16 + OAM1_X(+32), OAM2_CHR(0x88) + OAM2_LAYER(3),
+    OAM0_SHAPE_32x16 + OAM0_BLEND, OAM1_SIZE_32x16 + OAM1_X(+64), OAM2_CHR(0x8C) + OAM2_LAYER(3),
+    OAM0_SHAPE_32x16 + OAM0_BLEND, OAM1_SIZE_32x16 + OAM1_X(+96), OAM2_CHR(0x90) + OAM2_LAYER(3),
+};
+
+CONST_DATA u16 objs_8A1864C_4[] =
+{
+    2,
+    OAM0_SHAPE_32x16 + OAM0_BLEND, OAM1_SIZE_32x16 + OAM1_X(+48), OAM2_CHR(0x94) + OAM2_LAYER(3),
+    OAM0_SHAPE_32x16 + OAM0_BLEND, OAM1_SIZE_32x16 + OAM1_X(+88), OAM2_CHR(0xCE) + OAM2_LAYER(3),
+};
+
+CONST_DATA u16 * objs_8A1864C[] =
+{
     objs_8A1864C_1,
     objs_8A1864C_2,
     objs_8A1864C_3,
     objs_8A1864C_4
 };
 
-CONST_DATA struct ProcCmd ProcScr_PrepSpecialCharEff[] = {
+CONST_DATA struct ProcCmd ProcScr_PrepSpecialCharEff[] =
+{
     PROC_YIELD,
     PROC_CALL(ProcPrepSpChar_OnInit),
     PROC_SET_END_CB(ProcPrepSpChar_OnEnd),
@@ -913,12 +960,14 @@ CONST_DATA struct ProcCmd ProcScr_PrepSpecialCharEff[] = {
     PROC_END
 };
 
-CONST_DATA struct ProcCmd ProcScr_PrepScreenMenuDummyItem[] = {
+CONST_DATA struct ProcCmd ProcScr_PrepScreenMenuDummyItem[] =
+{
     PROC_BLOCK,
     PROC_END
 };
 
-CONST_DATA struct ProcCmd ProcScr_PrepMenu[] = {
+CONST_DATA struct ProcCmd ProcScr_PrepMenu[] =
+{
     PROC_CALL(PrepMenu_OnInit),
     PROC_SET_END_CB(PrepMenu_OnEnd),
     PROC_YIELD,
@@ -936,3 +985,5 @@ PROC_LABEL(2),
 PROC_LABEL(10),
     PROC_END
 };
+
+// clang-format on
