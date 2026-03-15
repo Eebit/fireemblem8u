@@ -1,6 +1,4 @@
 #include "global.h"
-#include "functions.h"
-#include "variables.h"
 #include "hardware.h"
 #include "bmcontainer.h"
 #include "ap.h"
@@ -39,7 +37,7 @@ void TraineePromo_ResetScreenEffect()
     gLCDControlBuffer.bg1cnt.priority = 1;
     gLCDControlBuffer.bg2cnt.priority = 2;
     gLCDControlBuffer.bg3cnt.priority = 3;
-    SetBlendConfig(3, 0, 0, 0x10);
+    SetBlendDarken(16);
     SetBlendTargetA(1, 1, 1, 1, 1);
 }
 
@@ -76,7 +74,7 @@ void NullExpForChar100AndResetScreen()
     if (unit)
         unit->exp = -1;
 
-    SetBlendConfig(3, 0, 0, 0x10);
+    SetBlendDarken(16);
     SetDispEnable(0, 0, 0, 0, 0);
     CallSomeSoundMaybe(SONG_COMBAT_PREPARATION, 0x100, 0x100, 0x20, NULL);
 }
@@ -92,7 +90,7 @@ void PrepPromoteDebugMaybe(struct Proc08A184B4 *proc)
     gLCDControlBuffer.bg2cnt.priority = 2;
     gLCDControlBuffer.bg3cnt.priority = 3;
 
-    SetBlendConfig(3, 0, 0, 0x10);
+    SetBlendDarken(16);
     SetBlendTargetA(1, 1, 1, 1, 1);
     EndAllProcChildren(proc);
     Proc_StartBlocking(ProcScr_PrepPromoteDebug, proc);
@@ -128,17 +126,17 @@ void PutObj8A18582_WithConfigs(int xOam1, int yOam0, int a3, u16 oam2)
     int val;
     if (1 & a3) {
         xOam1 -= 4;
-        PutSpriteExt(4, xOam1 + 0x40, yOam0, objs_8A18614[0xA], oam2);
+        PutSpriteExt(4, xOam1 + 64, yOam0, objs_8A18614[10], oam2);
     }
     PutSpriteExt(4, xOam1, yOam0, obj_8A18582, oam2);
 
     val = a3 >> 1;
     if (val < 10)
-        PutSpriteExt(4, xOam1 + 0x30, yOam0, objs_8A18614[0xB], oam2);
+        PutSpriteExt(4, xOam1 + 48, yOam0, objs_8A18614[11], oam2);
     else
-        PutSpriteExt(4, xOam1 + 0x30, yOam0, objs_8A18614[val / 10], oam2);
+        PutSpriteExt(4, xOam1 + 48, yOam0, objs_8A18614[val / 10], oam2);
 
-    PutSpriteExt(4, xOam1 + 0x38, yOam0, objs_8A18614[val % 10], oam2);
+    PutSpriteExt(4, xOam1 + 56, yOam0, objs_8A18614[val % 10], oam2);
 }
 
 void PutObj8A18590_WithConfigs(int xOam1, int yOam0, int a3, u16 oam2)
@@ -146,17 +144,17 @@ void PutObj8A18590_WithConfigs(int xOam1, int yOam0, int a3, u16 oam2)
     int val;
     if (1 & a3) {
         xOam1 -= 4;
-        PutSpriteExt(4, xOam1 + 0x40, yOam0, objs_8A18614[0xA], oam2);
+        PutSpriteExt(4, xOam1 + 64, yOam0, objs_8A18614[10], oam2);
     }
     PutSpriteExt(4, xOam1, yOam0, obj_8A18590, oam2);
 
     val = a3 >> 1;
     if (val < 10)
-        PutSpriteExt(4, xOam1 + 0x30, yOam0, objs_8A18614[0xB], oam2);
+        PutSpriteExt(4, xOam1 + 48, yOam0, objs_8A18614[0xB], oam2);
     else
-        PutSpriteExt(4, xOam1 + 0x30, yOam0, objs_8A18614[val / 10], oam2);
+        PutSpriteExt(4, xOam1 + 48, yOam0, objs_8A18614[val / 10], oam2);
 
-    PutSpriteExt(4, xOam1 + 0x38, yOam0, objs_8A18614[val % 10], oam2);
+    PutSpriteExt(4, xOam1 + 56, yOam0, objs_8A18614[val % 10], oam2);
 }
 
 void PutObj8A1859E_WithConfigs(int xOam1, int yOam0, int a3, u16 oam2)
@@ -164,17 +162,17 @@ void PutObj8A1859E_WithConfigs(int xOam1, int yOam0, int a3, u16 oam2)
     int val;
     if (1 & a3) {
         xOam1 -= 4;
-        PutSpriteExt(4, xOam1 + 0x3C, yOam0, objs_8A18614[0xA], oam2);
+        PutSpriteExt(4, xOam1 + 60, yOam0, objs_8A18614[10], oam2);
     }
     PutSpriteExt(4, xOam1 + 4, yOam0, obj_8A1859E, oam2);
 
     val = a3 >> 1;
     if (val < 10)
-        PutSpriteExt(4, xOam1 + 0x2C, yOam0, objs_8A18614[0xB], oam2);
+        PutSpriteExt(4, xOam1 + 44, yOam0, objs_8A18614[11], oam2);
     else
-        PutSpriteExt(4, xOam1 + 0x2C, yOam0, objs_8A18614[val / 10], oam2);
+        PutSpriteExt(4, xOam1 + 44, yOam0, objs_8A18614[val / 10], oam2);
 
-    PutSpriteExt(4, xOam1 + 0x34, yOam0, objs_8A18614[val % 10], oam2);
+    PutSpriteExt(4, xOam1 + 52, yOam0, objs_8A18614[val % 10], oam2);
 }
 
 void PutObj8A185AC(int xOam1, int yOam0, u16 oam2)
@@ -182,30 +180,29 @@ void PutObj8A185AC(int xOam1, int yOam0, u16 oam2)
     PutSpriteExt(4, xOam1, yOam0, obj_8A185AC, oam2);
 }
 
-
 void sub_8096958(struct ProcPrepSpecialChar *proc)
 {
     int i;
 
-    int xOam1 = 0xA0;
+    int xOam1 = 160;
     int yOam0 = 8;
 
-    if (0 == CheckInLinkArena()) {
+    if (!CheckInLinkArena()) {
         switch (proc->unk30) {
         case 1:
-            PutObj8A18582_WithConfigs(xOam1, yOam0, proc->unk2F, 0x6380);
+            PutObj8A18582_WithConfigs(xOam1, yOam0, proc->unk2F, OAM2_CHR(0x380) + OAM2_PAL(6));
             break;
     
         case 2:
-            PutObj8A18590_WithConfigs(xOam1, yOam0, proc->unk2F, 0x6380);
+            PutObj8A18590_WithConfigs(xOam1, yOam0, proc->unk2F, OAM2_CHR(0x380) + OAM2_PAL(6));
             break;
     
         case 3:
-            PutObj8A1859E_WithConfigs(xOam1, yOam0, proc->unk2F, 0x6380);
+            PutObj8A1859E_WithConfigs(xOam1, yOam0, proc->unk2F, OAM2_CHR(0x380) + OAM2_PAL(6));
             break;
     
         case 4:
-            PutObj8A185AC(xOam1, yOam0, 0x6380);
+            PutObj8A185AC(xOam1, yOam0, OAM2_CHR(0x380) + OAM2_PAL(6));
             break;
     
         case 0:
@@ -214,21 +211,21 @@ void sub_8096958(struct ProcPrepSpecialChar *proc)
         }
     
         for (i = 0; i < 3; i++)
-            PutSpriteExt(4, 0x80 + i * 0x20, 0x18, gObject_32x16, 0xB6C0 + 4 * i);
+            PutSpriteExt(4, 128 + i * 32, 24, gObject_32x16, OAM2_CHR(0x2C0) + OAM2_LAYER(1) + OAM2_PAL(11) + 4 * i);
     
         if (proc->blink_Start || (1 & (proc->unk36 >> 2)))
-                PutSpriteExt(4, 0x14, 0x8C, obj_08A18E4E, 0x300);
+            PutSpriteExt(4, 20, 140, obj_08A18E4E, OAM2_CHR(0x300));
     
         if (proc->blink_B || (1 & (proc->unk36 >> 2)))
-            PutSpriteExt(4, 0x64, 0x8C, obj_08A18E76, 0x300);
+            PutSpriteExt(4, 100, 140, obj_08A18E76, OAM2_CHR(0x300));
     
-        PutObj8A1856E(0x74, 0x28, 0x9380);
+        PutObj8A1856E(116, 40, OAM2_CHR(0x380) + OAM2_PAL(9));
 
     } else {
-        if (0 != Prep_HasUnitDeployed())
-            PutSpriteExt(4, 0x14, 0x8C, obj_08A18E62, 0x300);
+        if (Prep_HasUnitDeployed())
+            PutSpriteExt(4, 20, 140, obj_08A18E62, OAM2_CHR(0x300));
 
-        PutObj8A1856E(0x74, 0x20, 0x9380);
+        PutObj8A1856E(116, 32, OAM2_CHR(0x380) + OAM2_PAL(9));
     }
 }
 
@@ -242,9 +239,9 @@ void ProcPrepSpChar_OnInit(struct ProcPrepSpecialChar *proc)
     ForceSyncUnitSpriteSheet();
 
     if (CheckInLinkArena()) {
-        proc->apProc = APProc_Create(gUnknown_08A1B194, 0x3C, 0x10, 0x9E40, 1, 0xD);
+        proc->apProc = APProc_Create(gUnknown_08A1B194, 60, 16, OAM2_CHR(0x240) + OAM2_LAYER(3) + OAM2_PAL(9), 1, 13);
     } else {
-        proc->apProc = APProc_Create(gUnknown_08A1B194, 0x3C, 0x10, 0x9E40, 0, 0xD);
+        proc->apProc = APProc_Create(gUnknown_08A1B194, 60, 16, OAM2_CHR(0x240) + OAM2_LAYER(3) + OAM2_PAL(9), 0, 13);
 
         chIndex = gPlaySt.chapterIndex;
         if ((chIndex - 0x24) < 10)
@@ -342,11 +339,12 @@ void sub_8096C34(int a1, int a2)
     }
     r8 = _r8;
 
-    PutNumberOrBlank(TILEMAP_LOCATED(gBG0TilemapBuffer, 0x4, 0x0), 2, r7);
-    PutNumberOrBlank(TILEMAP_LOCATED(gBG0TilemapBuffer, 0x4, 0x2), 2, r5);
-    PutNumberOrBlank(TILEMAP_LOCATED(gBG0TilemapBuffer, 0x4, 0x4), 2, r6);
-    PutNumberOrBlank(TILEMAP_LOCATED(gBG0TilemapBuffer, 0x4, 0x6), 2, r8);
-    BG_EnableSyncByMask(1);
+    PutNumberOrBlank(TILEMAP_LOCATED(gBG0TilemapBuffer, 4, 0), TEXT_COLOR_SYSTEM_BLUE, r7);
+    PutNumberOrBlank(TILEMAP_LOCATED(gBG0TilemapBuffer, 4, 2), TEXT_COLOR_SYSTEM_BLUE, r5);
+    PutNumberOrBlank(TILEMAP_LOCATED(gBG0TilemapBuffer, 4, 4), TEXT_COLOR_SYSTEM_BLUE, r6);
+    PutNumberOrBlank(TILEMAP_LOCATED(gBG0TilemapBuffer, 4, 6), TEXT_COLOR_SYSTEM_BLUE, r8);
+
+    BG_EnableSyncByMask(BG0_SYNC_BIT);
 }
 
 void PrepMenu_OnInit(struct ProcPrepMenu * proc)
@@ -374,7 +372,7 @@ void PrepMenu_CtrlLoop(struct ProcPrepMenu *proc)
     int xPos = (proc->xPos + 1) * 8 + 4;
     int yPos = (proc->yPos + 1) * 8 + proc->cur_index * 16;
 
-    ShowSysHandCursor(xPos, yPos, 0x6, 0x400);
+    ShowSysHandCursor(xPos, yPos, 6, 0x400);
 
     cmd = proc->cmds[proc->cur_index];
 
@@ -513,8 +511,7 @@ void SetPrepScreenMenuOnEnd(const void * func)
 
 void SetPrepScreenMenuItem(int index, const void* func, int color, int msg, int msg_rtext)
 {
-    int i, max_index;
-    struct ProcPrepMenuItem* cmd;
+    int i;
     struct ProcPrepMenu *proc;
     proc = Proc_Find(ProcScr_PrepMenu);
 
@@ -595,7 +592,7 @@ void DrawPrepScreenMenuFrameAt(int x, int y)
         proc->xPos = x;
         proc->yPos = y;
 
-        DrawUiFrame2(x, y, 0xA, proc->max_index * 2 + 2, 0);
+        DrawUiFrame2(x, y, 10, proc->max_index * 2 + 2, 0);
 
         if (proc->max_index > 1) {
             for (i = 0; i < proc->max_index; i++) {
@@ -640,7 +637,7 @@ void SetPrepScreenMenuPosition(int x, int y)
             }
         }
 
-        BG_EnableSyncByMask(0x1);
+        BG_EnableSyncByMask(BG0_SYNC_BIT);
     }
 }
 
@@ -673,12 +670,12 @@ void ResetPrepMenuScreen()
 
     if (proc) {
         TileMap_FillRect(TILEMAP_LOCATED(gBG0TilemapBuffer, proc->xPos, proc->yPos),
-                         0x9, proc->max_index * 2 + 2, 0);
+                         9, proc->max_index * 2 + 2, 0);
 
         TileMap_FillRect(TILEMAP_LOCATED(gBG1TilemapBuffer, proc->xPos, proc->yPos),
-                         0x9, proc->max_index * 2 + 2, 0);
+                         9, proc->max_index * 2 + 2, 0);
 
-        BG_EnableSyncByMask(0x3);
+        BG_EnableSyncByMask(BG0_SYNC_BIT | BG1_SYNC_BIT);
     }
 }
 
@@ -727,9 +724,9 @@ CONST_DATA struct ProcCmd ProcScr_PrepPromoteDebug[] = {
     PROC_WHILE(MusicProc4Exists),
     PROC_CALL(DoPromoteAnimForChar100),
     PROC_REPEAT(IsGameLockLevelReserved),
-    PROC_SLEEP(0x8),
+    PROC_SLEEP(8),
     PROC_CALL(NullExpForChar100AndResetScreen),
-    PROC_SLEEP(0x1E),
+    PROC_SLEEP(30),
     PROC_WHILE(MusicProc4Exists),
     PROC_END
 };
@@ -739,7 +736,7 @@ CONST_DATA struct ProcCmd ProcScr_PrepTraineePromo[] = {
     PROC_CALL(StartTraineePromoScreen),
     PROC_YIELD,
 
-PROC_LABEL(0xC8),
+PROC_LABEL(200),
     PROC_CALL(TraineePromo_ResetScreenEffect),
     PROC_CALL(AtMenu_UnlockGame),
     PROC_END
@@ -747,58 +744,113 @@ PROC_LABEL(0xC8),
 
 /* UNK */
 CONST_DATA u16 gUnknown_08A1852C[] = {
-    0x0001, 0x4000, 0x8000, 0x7780,
-    0x0002, 0x4000, 0x8000, 0x77C0,
-    0x4000, 0x8020,
+    0x0001,
+    0x4000, 0x8000, 0x7780,
+};
 
-    0x77C4, 0x0002, 0x4000, 0x6000,
-    0x6798, 0x4000, 0xA020, 0x679C,
-    0x0002, 0x4000,
+CONST_DATA u16 gUnknown_08A18534[] = {
+    0x0002,
+    0x4000, 0x8000, 0x77C0,
+    0x4000, 0x8020, 0x77C4,
+};
 
-    0x5020, 0x6798, 0x4000, 0x9000,
-    0x679C, 0x0001, 0x4000, 0x8000,
-    0x6798, 0x0001,
+CONST_DATA u16 gUnknown_08A18542[] = {
+    0x0002,
+    0x4000, 0x6000, 0x6798,
+    0x4000, 0xA020, 0x679C,
+};
 
-    0x4000, 0x8000, 0x679C
+CONST_DATA u16 gUnknown_08A18550[] = {
+    0x0002,
+    0x4000, 0x5020, 0x6798,
+    0x4000, 0x9000, 0x679C,
+};
+
+CONST_DATA u16 gUnknown_08A1855E[] = {
+    0x0001,
+    0x4000, 0x8000, 0x6798,
+};
+
+CONST_DATA u16 gUnknown_08A18566[] = {
+    0x0001,
+    0x4000, 0x8000, 0x679C,
 };
 
 CONST_DATA u16 obj_8A1856E[] = {
-    0x0003, 0x4000, 0x8000, 0x0412,
-    0x4000, 0x8020, 0x0416, 0x0000,
-    0x4040, 0x041A,
+    0x0003,
+    0x4000, 0x8000, 0x0412,
+    0x4000, 0x8020, 0x0416,
+    0x0000, 0x4040, 0x041A,
 };
 
 CONST_DATA u16 obj_8A18582[] = {
-    0x0002, 0x4000, 0x8000, 0x0400,
-    0x0000, 0x4020, 0x0404
+    0x0002,
+    0x4000, 0x8000, 0x0400,
+    0x0000, 0x4020, 0x0404,
 };
 
 CONST_DATA u16 obj_8A18590[] = {
-    0x0002, 0x4000, 0x8000, 0x0440,
-    0x0000, 0x4020, 0x0444
+    0x0002,
+    0x4000, 0x8000, 0x0440,
+    0x0000, 0x4020, 0x0444,
 };
 
 CONST_DATA u16 obj_8A1859E[] = {
-    0x0002, 0x4000, 0x8000, 0x0446,
-    0x8000, 0x0020, 0x044A
+    0x0002,
+    0x4000, 0x8000, 0x0446,
+    0x8000, 0x0020, 0x044A,
 };
 
 CONST_DATA u16 obj_8A185AC[] = {
-    0x0002, 0x4000, 0x8000, 0x044B,
-    0x4000, 0x8020, 0x044F
+    0x0002,
+    0x4000, 0x8000, 0x044B,
+    0x4000, 0x8020, 0x044F,
 };
 
-static CONST_DATA u16 objs_8A18614_1[] = {0x0001, 0x8000, 0x0000, 0x0406};
-static CONST_DATA u16 objs_8A18614_2[] = {0x0001, 0x8000, 0x0000, 0x0407};
-static CONST_DATA u16 objs_8A18614_3[] = {0x0001, 0x8000, 0x0000, 0x0408};
-static CONST_DATA u16 objs_8A18614_4[] = {0x0001, 0x8000, 0x0000, 0x0409};
-static CONST_DATA u16 objs_8A18614_5[] = {0x0001, 0x8000, 0x0000, 0x040A};
-static CONST_DATA u16 objs_8A18614_6[] = {0x0001, 0x8000, 0x0000, 0x040B};
-static CONST_DATA u16 objs_8A18614_7[] = {0x0001, 0x8000, 0x0000, 0x040C};
-static CONST_DATA u16 objs_8A18614_8[] = {0x0001, 0x8000, 0x0000, 0x040D};
-static CONST_DATA u16 objs_8A18614_9[] = {0x0001, 0x8000, 0x0000, 0x040E};
-static CONST_DATA u16 objs_8A18614_A[] = {0x0001, 0x8000, 0x0000, 0x040F};
-static CONST_DATA u16 objs_8A18614_B[] = {0x0001, 0x8000, 0x0000, 0x0410};
+static CONST_DATA u16 objs_8A18614_1[] = {
+    0x0001,
+    0x8000, 0x0000, 0x0406,
+};
+static CONST_DATA u16 objs_8A18614_2[] = {
+    0x0001,
+    0x8000, 0x0000, 0x0407,
+};
+static CONST_DATA u16 objs_8A18614_3[] = {
+    0x0001,
+    0x8000, 0x0000, 0x0408,
+};
+static CONST_DATA u16 objs_8A18614_4[] = {
+    0x0001,
+    0x8000, 0x0000, 0x0409,
+};
+static CONST_DATA u16 objs_8A18614_5[] = {
+    0x0001,
+    0x8000, 0x0000, 0x040A,
+};
+static CONST_DATA u16 objs_8A18614_6[] = {
+    0x0001,
+    0x8000, 0x0000, 0x040B,
+};
+static CONST_DATA u16 objs_8A18614_7[] = {
+    0x0001,
+    0x8000, 0x0000, 0x040C,
+};
+static CONST_DATA u16 objs_8A18614_8[] = {
+    0x0001,
+    0x8000, 0x0000, 0x040D,
+};
+static CONST_DATA u16 objs_8A18614_9[] = {
+    0x0001,
+    0x8000, 0x0000, 0x040E,
+};
+static CONST_DATA u16 objs_8A18614_A[] = {
+    0x0001,
+    0x8000, 0x0000, 0x040F,
+};
+static CONST_DATA u16 objs_8A18614_B[] = {
+    0x0001,
+    0x8000, 0x0000, 0x0410,
+};
 
 CONST_DATA u16 *objs_8A18614[] = {
     objs_8A18614_1,
@@ -816,13 +868,35 @@ CONST_DATA u16 *objs_8A18614[] = {
 };
 
 static CONST_DATA u16 obj_8A18644[] = {
-    0x0001, 0x0400, 0x8000, 0x0C80
+    0x0001,
+    0x0400, 0x8000, 0x0C80,
 };
 
-static CONST_DATA u16 objs_8A1864C_1[] = {0x0003, 0x4400, 0x8020, 0x0C94, 0x4400, 0x8048, 0x0C98, 0x0400, 0x4068, 0x0C9C};
-static CONST_DATA u16 objs_8A1864C_2[] = {0x0004, 0x4400, 0x8008, 0x0C94, 0x4400, 0x8030, 0x0CC4, 0x4400, 0x8050, 0x0CC8, 0x0400, 0x4070, 0x0CCC};
-static CONST_DATA u16 objs_8A1864C_3[] = {0x0004, 0x4400, 0x8000, 0x0C84, 0x4400, 0x8020, 0x0C88, 0x4400, 0x8040, 0x0C8C, 0x4400, 0x8060, 0x0C90};
-static CONST_DATA u16 objs_8A1864C_4[] = {0x0002, 0x4400, 0x8030, 0x0C94, 0x4400, 0x8058, 0x0CCE, 0x0000};
+static CONST_DATA u16 objs_8A1864C_1[] = {
+    0x0003,
+    0x4400, 0x8020, 0x0C94,
+    0x4400, 0x8048, 0x0C98,
+    0x0400, 0x4068, 0x0C9C,
+};
+static CONST_DATA u16 objs_8A1864C_2[] = {
+    0x0004,
+    0x4400, 0x8008, 0x0C94,
+    0x4400, 0x8030, 0x0CC4,
+    0x4400, 0x8050, 0x0CC8,
+    0x0400, 0x4070, 0x0CCC,
+};
+static CONST_DATA u16 objs_8A1864C_3[] = {
+    0x0004,
+    0x4400, 0x8000, 0x0C84,
+    0x4400, 0x8020, 0x0C88,
+    0x4400, 0x8040, 0x0C8C,
+    0x4400, 0x8060, 0x0C90,
+};
+static CONST_DATA u16 objs_8A1864C_4[] = {
+    0x0002,
+    0x4400, 0x8030, 0x0C94,
+    0x4400, 0x8058, 0x0CCE,
+};
 
 CONST_DATA u16 *objs_8A1864C[] = {
     objs_8A1864C_1,
@@ -849,16 +923,16 @@ CONST_DATA struct ProcCmd ProcScr_PrepMenu[] = {
     PROC_SET_END_CB(PrepMenu_OnEnd),
     PROC_YIELD,
 
-PROC_LABEL(0x0),
+PROC_LABEL(0),
     PROC_REPEAT(PrepMenu_ShowActiveHand),
 
 
-PROC_LABEL(0x1),
+PROC_LABEL(1),
     PROC_REPEAT(PrepMenu_CtrlLoop),
 
-PROC_LABEL(0x2),
+PROC_LABEL(2),
     PROC_REPEAT(PrepMenu_ShowFrozenHand),
 
-PROC_LABEL(0xA),
+PROC_LABEL(10),
     PROC_END
 };
