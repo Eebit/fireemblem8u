@@ -116,66 +116,66 @@ int PrepAtMenuExists(ProcPtr proc)
     return Proc_Find(ProcScr_AtMenu) ? 1 : 0;
 }
 
-void PutObj8A1856E(int xOam1, int yOam0, u16 oam2)
+void PutPrepInformationSprite(int xOam1, int yOam0, u16 oam2)
 {
-    PutSpriteExt(4, xOam1, yOam0, obj_8A1856E, oam2);
+    PutSpriteExt(4, xOam1, yOam0, Sprite_PrepInformation, oam2);
 }
 
-void PutObj8A18582_WithConfigs(int xOam1, int yOam0, int a3, u16 oam2)
+void PutPrepChapterSprite_Default(int xOam1, int yOam0, int a3, u16 oam2)
 {
     int val;
     if (1 & a3) {
         xOam1 -= 4;
-        PutSpriteExt(4, xOam1 + 64, yOam0, objs_8A18614[10], oam2);
+        PutSpriteExt(4, xOam1 + 64, yOam0, SpriteArray_PrepChapterNumbers[10], oam2);
     }
-    PutSpriteExt(4, xOam1, yOam0, obj_8A18582, oam2);
+    PutSpriteExt(4, xOam1, yOam0, Sprite_PrepChapter, oam2);
 
     val = a3 >> 1;
     if (val < 10)
-        PutSpriteExt(4, xOam1 + 48, yOam0, objs_8A18614[11], oam2);
+        PutSpriteExt(4, xOam1 + 48, yOam0, SpriteArray_PrepChapterNumbers[11], oam2);
     else
-        PutSpriteExt(4, xOam1 + 48, yOam0, objs_8A18614[val / 10], oam2);
+        PutSpriteExt(4, xOam1 + 48, yOam0, SpriteArray_PrepChapterNumbers[val / 10], oam2);
 
-    PutSpriteExt(4, xOam1 + 56, yOam0, objs_8A18614[val % 10], oam2);
+    PutSpriteExt(4, xOam1 + 56, yOam0, SpriteArray_PrepChapterNumbers[val % 10], oam2);
 }
 
-void PutObj8A18590_WithConfigs(int xOam1, int yOam0, int a3, u16 oam2)
+void PutPrepChapterSprite_Tower(int xOam1, int yOam0, int a3, u16 oam2)
 {
     int val;
     if (1 & a3) {
         xOam1 -= 4;
-        PutSpriteExt(4, xOam1 + 64, yOam0, objs_8A18614[10], oam2);
+        PutSpriteExt(4, xOam1 + 64, yOam0, SpriteArray_PrepChapterNumbers[10], oam2);
     }
     PutSpriteExt(4, xOam1, yOam0, obj_8A18590, oam2);
 
     val = a3 >> 1;
     if (val < 10)
-        PutSpriteExt(4, xOam1 + 48, yOam0, objs_8A18614[0xB], oam2);
+        PutSpriteExt(4, xOam1 + 48, yOam0, SpriteArray_PrepChapterNumbers[0xB], oam2);
     else
-        PutSpriteExt(4, xOam1 + 48, yOam0, objs_8A18614[val / 10], oam2);
+        PutSpriteExt(4, xOam1 + 48, yOam0, SpriteArray_PrepChapterNumbers[val / 10], oam2);
 
-    PutSpriteExt(4, xOam1 + 56, yOam0, objs_8A18614[val % 10], oam2);
+    PutSpriteExt(4, xOam1 + 56, yOam0, SpriteArray_PrepChapterNumbers[val % 10], oam2);
 }
 
-void PutObj8A1859E_WithConfigs(int xOam1, int yOam0, int a3, u16 oam2)
+void PutPrepChapterSprite_Ruins(int xOam1, int yOam0, int a3, u16 oam2)
 {
     int val;
     if (1 & a3) {
         xOam1 -= 4;
-        PutSpriteExt(4, xOam1 + 60, yOam0, objs_8A18614[10], oam2);
+        PutSpriteExt(4, xOam1 + 60, yOam0, SpriteArray_PrepChapterNumbers[10], oam2);
     }
     PutSpriteExt(4, xOam1 + 4, yOam0, obj_8A1859E, oam2);
 
     val = a3 >> 1;
     if (val < 10)
-        PutSpriteExt(4, xOam1 + 44, yOam0, objs_8A18614[11], oam2);
+        PutSpriteExt(4, xOam1 + 44, yOam0, SpriteArray_PrepChapterNumbers[11], oam2);
     else
-        PutSpriteExt(4, xOam1 + 44, yOam0, objs_8A18614[val / 10], oam2);
+        PutSpriteExt(4, xOam1 + 44, yOam0, SpriteArray_PrepChapterNumbers[val / 10], oam2);
 
-    PutSpriteExt(4, xOam1 + 52, yOam0, objs_8A18614[val % 10], oam2);
+    PutSpriteExt(4, xOam1 + 52, yOam0, SpriteArray_PrepChapterNumbers[val % 10], oam2);
 }
 
-void PutObj8A185AC(int xOam1, int yOam0, u16 oam2)
+void PutPrepChapterSprite_Skirmish(int xOam1, int yOam0, u16 oam2)
 {
     PutSpriteExt(4, xOam1, yOam0, obj_8A185AC, oam2);
 }
@@ -190,19 +190,19 @@ void sub_8096958(struct ProcPrepSpecialChar *proc)
     if (!CheckInLinkArena()) {
         switch (proc->unk30) {
         case 1:
-            PutObj8A18582_WithConfigs(xOam1, yOam0, proc->unk2F, OAM2_CHR(0x380) + OAM2_PAL(6));
+            PutPrepChapterSprite_Default(xOam1, yOam0, proc->unk2F, OAM2_CHR(0x380) + OAM2_PAL(6));
             break;
     
         case 2:
-            PutObj8A18590_WithConfigs(xOam1, yOam0, proc->unk2F, OAM2_CHR(0x380) + OAM2_PAL(6));
+            PutPrepChapterSprite_Tower(xOam1, yOam0, proc->unk2F, OAM2_CHR(0x380) + OAM2_PAL(6));
             break;
     
         case 3:
-            PutObj8A1859E_WithConfigs(xOam1, yOam0, proc->unk2F, OAM2_CHR(0x380) + OAM2_PAL(6));
+            PutPrepChapterSprite_Ruins(xOam1, yOam0, proc->unk2F, OAM2_CHR(0x380) + OAM2_PAL(6));
             break;
     
         case 4:
-            PutObj8A185AC(xOam1, yOam0, OAM2_CHR(0x380) + OAM2_PAL(6));
+            PutPrepChapterSprite_Skirmish(xOam1, yOam0, OAM2_CHR(0x380) + OAM2_PAL(6));
             break;
     
         case 0:
@@ -214,18 +214,18 @@ void sub_8096958(struct ProcPrepSpecialChar *proc)
             PutSpriteExt(4, 128 + i * 32, 24, gObject_32x16, OAM2_CHR(0x2C0) + OAM2_LAYER(1) + OAM2_PAL(11) + 4 * i);
     
         if (proc->blink_Start || (1 & (proc->unk36 >> 2)))
-            PutSpriteExt(4, 20, 140, obj_08A18E4E, OAM2_CHR(0x300));
+            PutSpriteExt(4, 20, 140, Sprite_PrepStartButton, OAM2_CHR(0x300));
     
         if (proc->blink_B || (1 & (proc->unk36 >> 2)))
-            PutSpriteExt(4, 100, 140, obj_08A18E76, OAM2_CHR(0x300));
+            PutSpriteExt(4, 100, 140, Sprite_PrepBButton, OAM2_CHR(0x300));
     
-        PutObj8A1856E(116, 40, OAM2_CHR(0x380) + OAM2_PAL(9));
+        PutPrepInformationSprite(116, 40, OAM2_CHR(0x380) + OAM2_PAL(9));
 
     } else {
         if (Prep_HasUnitDeployed())
             PutSpriteExt(4, 20, 140, obj_08A18E62, OAM2_CHR(0x300));
 
-        PutObj8A1856E(116, 32, OAM2_CHR(0x380) + OAM2_PAL(9));
+        PutPrepInformationSprite(116, 32, OAM2_CHR(0x380) + OAM2_PAL(9));
     }
 }
 
@@ -239,16 +239,16 @@ void ProcPrepSpChar_OnInit(struct ProcPrepSpecialChar *proc)
     ForceSyncUnitSpriteSheet();
 
     if (CheckInLinkArena()) {
-        proc->apProc = APProc_Create(gUnknown_08A1B194, 60, 16, OAM2_CHR(0x240) + OAM2_LAYER(3) + OAM2_PAL(9), 1, 13);
+        proc->apProc = APProc_Create(AP_DrawPreparationsBanner, 60, 16, OAM2_CHR(0x240) + OAM2_LAYER(3) + OAM2_PAL(9), 1, 13);
     } else {
-        proc->apProc = APProc_Create(gUnknown_08A1B194, 60, 16, OAM2_CHR(0x240) + OAM2_LAYER(3) + OAM2_PAL(9), 0, 13);
+        proc->apProc = APProc_Create(AP_DrawPreparationsBanner, 60, 16, OAM2_CHR(0x240) + OAM2_LAYER(3) + OAM2_PAL(9), 0, 13);
 
         chIndex = gPlaySt.chapterIndex;
         if ((chIndex - 0x24) < 10)
             proc->unk30 = 2;
         else if ((chIndex - 0x2E) < 10)
             proc->unk30 = 3;
-        else if (sub_80C0960(chIndex))
+        else if (IsChapterMonsterSpawnActive(chIndex))
             proc->unk30 = 4;
         else if (chIndex - 0x15 <= 1 || chIndex == 0x22 || chIndex == 0x23)
             proc->unk30 = 0;
@@ -787,7 +787,7 @@ CONST_DATA u16 gUnknown_08A18566[] =
     OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_CHR(0x39C) + OAM2_LAYER(1) + OAM2_PAL(6),
 };
 
-CONST_DATA u16 obj_8A1856E[] =
+CONST_DATA u16 Sprite_PrepInformation[] =
 {
     3,
     OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_CHR(0x12) + OAM2_LAYER(1),
@@ -795,7 +795,7 @@ CONST_DATA u16 obj_8A1856E[] =
     OAM0_SHAPE_16x16, OAM1_SIZE_16x16 + OAM1_X(+64), OAM2_CHR(0x1A) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 obj_8A18582[] =
+CONST_DATA u16 Sprite_PrepChapter[] =
 {
     2,
     OAM0_SHAPE_32x16, OAM1_SIZE_32x16, OAM2_LAYER(1),
@@ -823,88 +823,88 @@ CONST_DATA u16 obj_8A185AC[] =
     OAM0_SHAPE_32x16, OAM1_SIZE_32x16 + OAM1_X(+32), OAM2_CHR(0x4F) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 objs_8A18614_1[] =
+CONST_DATA u16 Sprite_PrepChapterNum_0[] =
 {
     1,
     OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0x6) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 objs_8A18614_2[] =
+CONST_DATA u16 Sprite_PrepChapterNum_1[] =
 {
     1,
     OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0x7) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 objs_8A18614_3[] =
+CONST_DATA u16 Sprite_PrepChapterNum_2[] =
 {
     1,
     OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0x8) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 objs_8A18614_4[] =
+CONST_DATA u16 Sprite_PrepChapterNum_3[] =
 {
     1,
     OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0x9) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 objs_8A18614_5[] =
+CONST_DATA u16 Sprite_PrepChapterNum_4[] =
 {
     1,
     OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0xA) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 objs_8A18614_6[] =
+CONST_DATA u16 Sprite_PrepChapterNum_5[] =
 {
     1,
     OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0xB) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 objs_8A18614_7[] =
+CONST_DATA u16 Sprite_PrepChapterNum_6[] =
 {
     1,
     OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0xC) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 objs_8A18614_8[] = {
+CONST_DATA u16 Sprite_PrepChapterNum_7[] = {
     1,
     OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0xD) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 objs_8A18614_9[] =
+CONST_DATA u16 Sprite_PrepChapterNum_8[] =
 {
     1,
     OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0xE) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 objs_8A18614_A[] =
+CONST_DATA u16 Sprite_PrepChapterNum_9[] =
 {
     1,
     OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0xF) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 objs_8A18614_B[] =
+CONST_DATA u16 Sprite_PrepChapterNum_X[] =
 {
     1,
     OAM0_SHAPE_8x16, OAM1_SIZE_8x16, OAM2_CHR(0x10) + OAM2_LAYER(1),
 };
 
-CONST_DATA u16 * objs_8A18614[] =
+CONST_DATA u16 * SpriteArray_PrepChapterNumbers[] =
 {
-    objs_8A18614_1,
-    objs_8A18614_2,
-    objs_8A18614_3,
-    objs_8A18614_4,
-    objs_8A18614_5,
-    objs_8A18614_6,
-    objs_8A18614_7,
-    objs_8A18614_8,
-    objs_8A18614_9,
-    objs_8A18614_A,
-    objs_8A18614_B,
-    objs_8A18614_1
+    Sprite_PrepChapterNum_0,
+    Sprite_PrepChapterNum_1,
+    Sprite_PrepChapterNum_2,
+    Sprite_PrepChapterNum_3,
+    Sprite_PrepChapterNum_4,
+    Sprite_PrepChapterNum_5,
+    Sprite_PrepChapterNum_6,
+    Sprite_PrepChapterNum_7,
+    Sprite_PrepChapterNum_8,
+    Sprite_PrepChapterNum_9,
+    Sprite_PrepChapterNum_X,
+    Sprite_PrepChapterNum_0
 };
 
-CONST_DATA u16 obj_8A18644[] =
+CONST_DATA u16 Sprite_Unused_08A18644[] =
 {
     1,
     OAM0_SHAPE_32x32 + OAM0_BLEND, OAM1_SIZE_32x32, OAM2_CHR(0x80) + OAM2_LAYER(3),
