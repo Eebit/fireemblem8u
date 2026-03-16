@@ -68,8 +68,8 @@ Pal_SysBrownBox:  @ 0x08A1B154
 gPal_SupportScreenBanner:  @ 0x08A1B174
 	.incbin "baserom.gba", 0xA1B174, 0x20
 
-	.global gUnknown_08A1B194
-gUnknown_08A1B194:  @ 0x08A1B194
+	.global AP_DrawPreparationsBanner
+AP_DrawPreparationsBanner:  @ 0x08A1B194
 	.incbin "baserom.gba", 0xA1B194, 0x68
 
 	.global gUnknown_08A1B1FC

@@ -1029,7 +1029,7 @@ s8 IsWorldmapSkirmishAnimActive(void);
 int sub_80C0834(int, int, int, int, int);
 // void GetWMCenteredCameraPosition(s16, s16, s16 *, s16 *);
 int sub_80C089C(int, int, int, int);
-int sub_80C0960(int chIndex);
+int IsChapterMonsterSpawnActive(int chIndex);
 void sub_80C09B8(void);
 // ??? StartWorldmapStatusHelpBox(???);
 // ??? WorldmapStatus_GetCharDescription(???);

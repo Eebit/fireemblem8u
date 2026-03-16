@@ -517,7 +517,7 @@ void StartArenaResultsScreen(void);
 // ??? Arena_PlayArenaSong(???);
 void sub_80B5D3C(void);
 // ??? sub_80B5D48(???);
-void WriteSuspandPlaterIdle(void);
+void WriteSuspendPlayerIdle(void);
 int GetGameTacticsRank();
 int GetGameSurvivalRank();
 int GetGameExpRank();

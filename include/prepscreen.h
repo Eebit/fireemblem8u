@@ -201,13 +201,13 @@ extern CONST_DATA struct ProcCmd ProcScr_PrepMenuDescHandler[];
 extern CONST_DATA struct ProcCmd ProcScr_AtMenu[];
 extern CONST_DATA struct ProcCmd ProcScr_PrepPromoteDebug[];
 extern CONST_DATA struct ProcCmd ProcScr_PrepTraineePromo[];
-extern CONST_DATA u16 obj_8A1856E[];
-extern CONST_DATA u16 obj_8A18582[];
-extern CONST_DATA u16 obj_8A18590[];
-extern CONST_DATA u16 obj_8A1859E[];
-extern CONST_DATA u16 obj_8A185AC[];
-extern CONST_DATA u16 *objs_8A18614[];
-extern CONST_DATA struct ProcCmd ProcScr_PrepSpecialCharEff[];
+extern CONST_DATA u16 Sprite_PrepInformation[];
+extern CONST_DATA u16 Sprite_PrepChapter[];
+extern CONST_DATA u16 Sprite_PrepTower[];
+extern CONST_DATA u16 Sprite_PrepRuins[];
+extern CONST_DATA u16 Sprite_PrepExMap[];
+extern CONST_DATA u16 * SpriteArray_PrepChapterNumbers[];
+extern CONST_DATA struct ProcCmd ProcScr_PrepScreenSpriteDraw[];
 extern CONST_DATA struct ProcCmd ProcScr_PrepScreenMenuDummyItem[];
 extern CONST_DATA struct ProcCmd ProcScr_PrepMenu[];
 extern CONST_DATA u16 gSprite_MenuScrollContainer[];
@@ -235,9 +235,9 @@ extern CONST_DATA u16 gSprite_PrepUnitInfoBg[];
 extern CONST_DATA struct ProcCmd gProcScr_DrawUnitInfoBgSprites[];
 extern CONST_DATA struct ProcCmd ProcScr_PrepItemScreen[];
 extern CONST_DATA u16 obj_08A18E34[];
-extern CONST_DATA u16 obj_08A18E4E[];
+extern CONST_DATA u16 Sprite_PrepStartButton[];
 extern CONST_DATA u16 obj_08A18E62[];
-extern CONST_DATA u16 obj_08A18E76[];
+extern CONST_DATA u16 Sprite_PrepBButton[];
 extern CONST_DATA struct ProcCmd ProcScr_PrepUnitScreen[];
 extern CONST_DATA struct ProcCmd ProcScr_PrepItemTradeScreen[];
 extern CONST_DATA struct ProcCmd ProcScr_PrepItemUseScreen[];
@@ -272,7 +272,7 @@ extern u8 CONST_DATA gUnknown_08A1AC88[];
 extern u16 CONST_DATA Img_SysBrownBox[];
 extern u16 CONST_DATA Pal_SysBrownBox[];
 extern u16 CONST_DATA gPal_SupportScreenBanner[];
-extern u16 CONST_DATA gUnknown_08A1B194[];
+extern u16 CONST_DATA AP_DrawPreparationsBanner[];
 extern u8 gUnknown_08A1B1FC[]; // gfx
 extern u16 gUnknown_08A1B638[]; // pal
 extern u8 CONST_DATA gUnknown_08A1B658[];
@@ -443,33 +443,43 @@ void sub_8096668();
 void NewPrepScreenTraineePromotionManager();
 int PrepScreenTraineePromotionManagerExists(ProcPtr proc);
 int PrepAtMenuExists(ProcPtr proc);
-void PutObj8A1856E(int xOam1, int yOam0, u16 oam2);
-void PutObj8A18582_WithConfigs(int xOam1, int yOam0, int a3, u16 oam2);
-void PutObj8A18590_WithConfigs(int xOam1, int yOam0, int a3, u16 oam2);
-void PutObj8A1859E_WithConfigs(int xOam1, int yOam0, int a3, u16 oam2);
-void PutObj8A185AC(int xOam1, int yOam0, u16 oam2);
+void PutPrepInformationSprite(int xOam1, int yOam0, u16 oam2);
+void PutPrepChapterSprite_Default(int xOam1, int yOam0, int prepChapterNum, u16 oam2);
+void PutPrepChapterSprite_Tower(int xOam1, int yOam0, int prepChapterNum, u16 oam2);
+void PutPrepChapterSprite_Ruins(int xOam1, int yOam0, int prepChapterNum, u16 oam2);
+void PutPrepChapterSprite_Skirmish(int xOam1, int yOam0, u16 oam2);
 
-struct ProcPrepSpecialChar {
+enum
+{
+    PREP_KIND_FINAL_MAP = 0,
+    PREP_KIND_STANDARD = 1,
+    PREP_KIND_TOWER = 2,
+    PREP_KIND_RUINS = 3,
+    PREP_KIND_SKIRMISH = 4,
+};
+
+struct PrepSpriteDrawProc
+{
      PROC_HEADER;
-    /* 29 */ u8 _pad29_[0x2A - 0x29];
+    /* 29 */ STRUCT_PAD(0x29, 0x2A);
     /* 2A */ u8 unk2A;
     /* 2B */ u8 unk2B;
-    /* 29 */ u8 _pad2C_[0x2F - 0x2C];
-    /* 2F */ u8 unk2F;
-    /* 30 */ u8 unk30;
+    /* 29 */ STRUCT_PAD(0x2C, 0x2F);
+    /* 2F */ u8 prepChapterNum;
+    /* 30 */ u8 kind;
     /* 31 */ u8 unk31;
     /* 32 */ u8 unk32;
-    /* 33 */ u8 blink_Start;
-    /* 34 */ u8 blink_B;
+    /* 33 */ u8 buttonStartSolid;
+    /* 34 */ u8 buttonBSolid;
     /* 35 */ u8 unk35;
-    /* 36 */ u16 unk36;
+    /* 36 */ u16 timer;
     /* 38 */ ProcPtr apProc;
 };
 
-void sub_8096958(struct ProcPrepSpecialChar *proc);
-void ProcPrepSpChar_OnInit(struct ProcPrepSpecialChar *proc);
-void ProcPrepSpChar_Idle(struct ProcPrepSpecialChar *proc);
-void ProcPrepSpChar_OnEnd(struct ProcPrepSpecialChar *proc);
+void DrawPrepScreenSprites(struct PrepSpriteDrawProc *proc);
+void PrepSpriteDraw_Init(struct PrepSpriteDrawProc *proc);
+void PrepSpriteDraw_Loop(struct PrepSpriteDrawProc *proc);
+void PrepSpriteDraw_OnEnd(struct PrepSpriteDrawProc *proc);
 
 struct Unit * GetUnitFromPrepList(int index);
 void RegisterPrepUnitList(int index, struct Unit *);
@@ -496,10 +506,10 @@ int PrepGetDeployedUnitAmt(void);
 void PrepAutoCapDeployUnits(struct ProcAtMenu* proc);
 void RestartMuralBackground();
 void EndMuralBackground_(void);
-void PrepSpecialChar_BlinkButtonStart();
-void PrepSpecialChar_BlinkButtonB();
-ProcPtr StartPrepSpecialCharEffect(ProcPtr parent);
-void EndPrepSpecialCharEffect(void);
+void PrepSpriteDraw_BlinkButtonStart();
+void PrepSpriteDraw_BlinkButtonB();
+ProcPtr StartPrepScreenSpriteDraw(ProcPtr parent);
+void EndPrepScreenSpriteDraw(void);
 // ??? sub_8096C34(???);
 
 struct ProcPrepMenu {

@@ -197,7 +197,7 @@ int PrepScreenMenu_OnStartPress(struct ProcAtMenu* proc) {
     if(0 == proc->cur_counter)
         return 0;
 
-    PrepSpecialChar_BlinkButtonStart();
+    PrepSpriteDraw_BlinkButtonStart();
     Proc_Goto(proc, 0xB);
     return 1;
     
@@ -227,7 +227,7 @@ int PrepScreenMenu_OnBPress(struct ProcAtMenu* proc) {
     if (false == CanPrepScreenCheckMap())
         return false;
 
-    PrepSpecialChar_BlinkButtonB();
+    PrepSpriteDraw_BlinkButtonB();
     Proc_Goto(proc, 0x5);
     return true;
 }
