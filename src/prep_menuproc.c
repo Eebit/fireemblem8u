@@ -20,6 +20,7 @@
 #include "uiutils.h"
 #include "worldmap.h"
 
+#include "constants/chapters.h"
 #include "constants/songs.h"
 
 s8 CheckInLinkArena(void);
@@ -273,13 +274,13 @@ void PrepSpriteDraw_Init(struct PrepSpriteDrawProc * proc)
             APProc_Create(AP_DrawPreparationsBanner, 60, 16, OAM2_CHR(0x240) + OAM2_LAYER(3) + OAM2_PAL(9), 0, 13);
 
         chIndex = gPlaySt.chapterIndex;
-        if ((chIndex - 0x24) < 10)
+        if ((chIndex - CHAPTER_T_01) < 10)
             proc->kind = PREP_KIND_TOWER;
-        else if ((chIndex - 0x2E) < 10)
+        else if ((chIndex - CHAPTER_R_01) < 10)
             proc->kind = PREP_KIND_RUINS;
         else if (IsChapterMonsterSpawnActive(chIndex))
             proc->kind = PREP_KIND_SKIRMISH;
-        else if (chIndex - 0x15 <= 1 || chIndex == 0x22 || chIndex == 0x23)
+        else if (chIndex == CHAPTER_E_21 || chIndex == CHAPTER_E_21X || chIndex == CHAPTER_I_21 || chIndex == CHAPTER_I_21X)
             proc->kind = PREP_KIND_FINAL_MAP;
         else
             proc->kind = PREP_KIND_STANDARD;

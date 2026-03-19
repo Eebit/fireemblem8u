@@ -15,6 +15,7 @@
 #include "sio.h"
 #include "prepscreen.h"
 
+#include "constants/chapters.h"
 #include "constants/items.h"
 #include "constants/songs.h"
 
@@ -59,7 +60,7 @@ u8 CanPrepScreenSave(void)
 {
     u32 chapterIndex = gPlaySt.chapterIndex;
 
-    if ((!gGMData.state.bits.state_0) && (chapterIndex - 0x24 < 0x14))
+    if ((!gGMData.state.bits.state_0) && CHAPTER_IS_DUNGEON(chapterIndex))
     {
         return 0;
     }
